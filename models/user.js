@@ -6,7 +6,6 @@ const UserSchema = new mongoose.Schema({
   name : { 
     type : String, 
     default: '',
-    required: true, 
   },
   username : { 
     type : String, 
@@ -17,13 +16,15 @@ const UserSchema = new mongoose.Schema({
     type : String, 
     required : true 
   },
-  plate: {
-    type: String,
-    default: '',
-    // type: mongoose.Schema.Types.ObjectId, 
-    // ref: 'User'
+  plateId: { 
+    /* 
+    1. POST req to create plate 
+    2. PUT on user if user didn't register with a plate on initial registration 
+    */
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Plate'
   },
-  myReviews: {
+  myReviews: { // reviews that the user made
     type: Array
   } 
 });
@@ -37,6 +38,7 @@ UserSchema.set('toJSON', {
   }
 });
 
+//development:
 UserSchema.methods.serialize = function() {
   return {
     username: this.username,

@@ -14,6 +14,9 @@ const ReviewSchema = new mongoose.Schema({
   message: {
     type: String,
     required: true
+  },
+  userResponse: {
+    type: String,
   }
 });
 

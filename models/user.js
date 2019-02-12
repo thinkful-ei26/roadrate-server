@@ -1,32 +1,21 @@
 'use strict';
-
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
-  name : { 
-    type : String, 
+  name: { 
+    type: String, 
     default: '',
   },
   username : { 
-    type : String, 
+    type: String, 
     required: true, 
     unique: true 
   },
   password : { 
-    type : String, 
-    required : true 
-  },
-  plateId: { 
-    /* 
-    1. POST req to create plate 
-    2. PUT on user if user didn't register with a plate on initial registration 
-    */
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Plate'
-  },
-  myReviews: { // reviews that the user made
-    type: Array
-  } 
+    type: String, 
+    required: true 
+  }
 });
 
 UserSchema.set('toJSON', {
@@ -45,6 +34,18 @@ UserSchema.methods.serialize = function() {
     name: this.name || '',
     id: this._id,
   };
+};
+
+UserSchema.set('timestamps', true);
+
+// Creates validatePassword method
+UserSchema.methods.validatePassword = function(incomingPassword) {
+  return bcrypt.compare(incomingPassword, this.password);
+};
+
+UserSchema.statics.hashPassword = function(incomingPassword) {
+  const digest = bcrypt.hash(incomingPassword, 10);
+  return digest;
 };
 
 module.exports = mongoose.model('User', UserSchema);

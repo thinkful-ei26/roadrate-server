@@ -14,21 +14,15 @@ const PlateSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  // userId: {
-  //   type: mongoose.Schema.Types.ObjectId, 
-  //   ref: 'User'
-  // },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User',
+    default: 0,
+  },
   state: { // US state (like MA)
     type: String, 
     required: true
-  }, 
-  plateReviews: { // array of review ids
-    type: Array,
-    // plateId: {},
-    // isPositive: {}, 
-    // message: {},
-    // userResponse: {}
-  }, 
+  },
   karma: {
     type: Number
   }

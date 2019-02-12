@@ -7,6 +7,10 @@ const ReviewSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Plate'
   }, 
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   isPositive: {
     type: Boolean, 
     required: true
@@ -15,7 +19,7 @@ const ReviewSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  userResponse: {
+  ownerResponse: {
     type: String,
   }
 });

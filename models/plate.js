@@ -2,22 +2,32 @@
 
 const mongoose = require('mongoose');
 
+// car type validation for user claiming a plate
+
 const PlateSchema = new mongoose.Schema({
-  name : { 
-    type : String, 
-    default: '',
-    required: true, 
-  },
-  username : { 
+  license : { 
     type : String, 
     required: true, 
     unique: true 
   },
-  password : { 
-    type : String, 
-    required : true 
+  carType: {
+    type: String,
+    default: ''
   },
-  plate: {}, 
+  userId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User'
+  },
+  state: { // US state (like MA)
+    type: String, 
+    required: true
+  }, 
+  reviews: { // array of review ids
+    type: Array
+  }, 
+  karma: {
+    type: Number
+  }
 });
 
 module.exports = mongoose.model('Plate', PlateSchema);

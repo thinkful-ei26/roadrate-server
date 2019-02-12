@@ -28,4 +28,21 @@ const UserSchema = new mongoose.Schema({
   } 
 });
 
+UserSchema.set('toJSON', {
+  virtuals: true, 
+  transform: (doc, result) => {
+    delete result._id;
+    delete result.__v;
+    delete result.password; //delete plaintext password so it doesn't come back in the response
+  }
+});
+
+UserSchema.methods.serialize = function() {
+  return {
+    username: this.username,
+    name: this.name || '',
+    id: this._id,
+  };
+};
+
 module.exports = mongoose.model('User', UserSchema);

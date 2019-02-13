@@ -22,6 +22,7 @@ const app = express();
 //Routers
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const platesRouter = require('./routes/plates');
 
 // logs all requests
 app.use(
@@ -46,12 +47,7 @@ app.use(express.json());
 // Mount routers
 app.use('/api/users', usersRouter);
 app.use('/api', authRouter);
-
-app.get('/test', (req, res, next) => {
-  return res.json({
-    message: 'hello world'
-  });
-});
+app.use('/api', platesRouter);
 
 // Error handlers
 app.use(error404);

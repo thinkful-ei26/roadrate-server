@@ -19,7 +19,7 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  const stringFields = ['username', 'password', 'firstName', 'lastName'];
+  const stringFields = ['username', 'password', 'name'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string');
         
@@ -83,18 +83,19 @@ router.post('/', (req, res, next) => {
     name = name.trim();
   }
 
-  console.log(username, password, name)
+  console.log(username, password, name);
   return User.hashPassword(password)
     .then(digest => {
-      console.log('digest', digest)
+      console.log('digest', digest);
       const newUser = {
         username,
+        name,
         password: digest,
-      }
+      };
       return User.create(newUser);
     })
     .then(user => {
-      console.log('user',)
+      console.log('user', user);
       return res.status(201).json(user.serialize());
     })
     .catch( err => {
@@ -111,7 +112,7 @@ router.post('/', (req, res, next) => {
 });
 
 //DELETE WHEN IT COMES TO PRODUCTION TIME!!!!!!!!!!!
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   return User.find()
     .then(users => res.json(users.map(user => user.serialize())))
     .catch(err => res.status(500).json({message: 'Internal server error'}));

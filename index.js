@@ -23,6 +23,7 @@ const app = express();
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const platesRouter = require('./routes/plates');
+const reviewsRouter = require('./routes/reviews');
 
 // logs all requests
 app.use(
@@ -48,6 +49,7 @@ app.use(express.json());
 app.use('/api/users', usersRouter);
 app.use('/api', authRouter);
 app.use('/api', platesRouter);
+app.use('/reviews', reviewsRouter);
 
 // Error handlers
 app.use(error404);

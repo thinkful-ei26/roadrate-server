@@ -6,20 +6,22 @@ const users = [
     name: 'John Snow',
     username: 'john',
     // hash for "password123"
-    password: '$2a$10$Wz21bpsMCBBRdRztr2.ZYOw9sJGkFgcowKZCMtvaqdBuhvofmZHRe'
+    password: '$2a$10$Wz21bpsMCBBRdRztr2.ZYOw9sJGkFgcowKZCMtvaqdBuhvofmZHRe',
+    email: 'thenightswatch123@gmail.com'
   },
   {
     _id: '000000000000000000000002',
     name: 'Tyrion Lannister',
     username: 'tyrion',
     // hash for "password123"
-    password: '$2a$10$Wz21bpsMCBBRdRztr2.ZYOw9sJGkFgcowKZCMtvaqdBuhvofmZHRe'
+    password: '$2a$10$Wz21bpsMCBBRdRztr2.ZYOw9sJGkFgcowKZCMtvaqdBuhvofmZHRe',
+    email: 'HalfManHalfAmazing@gmail.com'
   }
 ];
 
 const plates = [
   {
-    _id: '0001',
+    _id: '000000000000000000000001',
     license: '123YOLO', 
     carType: 'Truck', 
     userId: '000000000000000000000001',
@@ -27,7 +29,7 @@ const plates = [
     karma: 60
   },
   {
-    _id: '0002',
+    _id: '000000000000000000000002',
     license: '456YOLO', 
     carType: 'Van', 
     userId: '000000000000000000000002',
@@ -38,17 +40,45 @@ const plates = [
 
 const reviews = [
   {
-    plateId: '0001',
+    plateId: '000000000000000000000001',
     userId: '000000000000000000000001',
     isPositive: true, 
     message: 'Good Driver!',
     ownerResponse: 'Nothing to see here'
   },
   {
-    plateId: '0002',
+    plateId: '000000000000000000000001',
     userId: '000000000000000000000002',
     isPositive: false, 
     message: 'Needs Improvement',
+    ownerResponse: 'Nothing to see here'
+  },
+  {
+    plateId: '000000000000000000000001',
+    userId: '000000000000000000000001',
+    isPositive: true, 
+    message: 'Good Driver!',
+    ownerResponse: 'Nothing to see here'
+  },
+  {
+    plateId: '000000000000000000000002',
+    userId: '000000000000000000000002',
+    isPositive: false, 
+    message: 'Needs Improvement',
+    ownerResponse: 'Nothing to see here'
+  },
+  {
+    plateId: '000000000000000000000002',
+    userId: '000000000000000000000001',
+    isPositive: true, 
+    message: 'Helped me change my car tire!',
+    ownerResponse: 'Nothing to see here'
+  },
+  {
+    plateId: '000000000000000000000002',
+    userId: '000000000000000000000002',
+    isPositive: false, 
+    message: 'Parked 5 feet from the curb and was affecting traffic getting downt the street.  7 thumbs down!!',
     ownerResponse: 'Nothing to see here'
   }
 ];

@@ -16,8 +16,8 @@ const PlateSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User',
-    default: 0,
+    ref: 'User'
+    // default: 0,
   },
   state: { // US state (like MA)
     type: String, 

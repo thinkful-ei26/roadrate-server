@@ -11,6 +11,10 @@ const ReviewSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  licensePlate: {
+    type: String,
+    required: true
+  },
   isPositive: {
     type: Boolean, 
     required: true

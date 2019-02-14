@@ -10,16 +10,16 @@ const User = require('../models/user');
 router.post('/', (req, res, next) => {
 
   console.log('here')
-  const requiredFields = ['username', 'password'];
+  const requiredFields = ['username', 'password', 'email'];
   const missingField = requiredFields.find(field => !(field in req.body));
         
   if (missingField) {
     const err = new Error(`missing '${missingField}' in request body`);
-    err.status = 422;
+    console.log('the issue:', err.status = 422);
     return next(err);
   }
 
-  const stringFields = ['username', 'password', 'name'];
+  const stringFields = ['username', 'password', 'email', 'name'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string');
         
@@ -29,8 +29,8 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  // Validate username and password have no whitespace
-  const explicityTrimmedFields = ['username', 'password'];
+  // Validate username and password and email have no whitespace
+  const explicityTrimmedFields = ['username', 'password', 'email'];
   const nonTrimmedField = explicityTrimmedFields.find(
     field => {
       return req.body[field].trim() !== req.body[field];
@@ -51,6 +51,9 @@ router.post('/', (req, res, next) => {
     password: {
       min: 10,
       max: 72
+    },
+    email: {
+      min: 1
     }
   };
         
@@ -77,19 +80,20 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  let { username, password, name} = req.body;
+  let { username, password, email, name} = req.body;
 
   if (name) {
     name = name.trim();
   }
 
-  console.log(username, password, name);
+  console.log(username, password, email, name);
   return User.hashPassword(password)
     .then(digest => {
       console.log('digest', digest);
       const newUser = {
         username,
         name,
+        email,
         password: digest,
       };
       return User.create(newUser);

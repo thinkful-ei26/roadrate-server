@@ -5,7 +5,6 @@ const router = express.Router();
 
 const User = require('../models/user');
 
-
 /* POST/CREATE user on /api/users */
 router.post('/', (req, res, next) => {
 
@@ -117,10 +116,20 @@ router.post('/', (req, res, next) => {
 
 //DELETE WHEN IT COMES TO PRODUCTION TIME!!!!!!!!!!!
 router.get('/', (req, res, next) => {
-  return User.find()
+  const { search } = req.query;
+  let filter = {};
+
+  console.log(req.query);
+
+  if (search) {
+    const re = new RegExp(search, 'i');
+    filter.$or = [{ 'username': re }];
+  }
+
+  return User
+    .find(filter)
     .then(users => res.json(users.map(user => user.serialize())))
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
-
 
 module.exports = router;

@@ -14,22 +14,21 @@ const ReviewSchema = new mongoose.Schema({
   plateNumber: {
     type: String,
     required: true,
-    unique: true
   },
   isPositive: {
-    type: Boolean, 
+    type: String, 
     // required: true
   }, 
   message: {
     type: String,
-    required: true
+    // required: true
   },
   ownerResponse: {
     type: String,
   },
-  state: {
+  plateState: {
     type: String,
-    required: true
+    // required: true
   }
 });
 

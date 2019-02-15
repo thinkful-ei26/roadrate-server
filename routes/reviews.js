@@ -4,6 +4,12 @@ const express = require('express');
 const passport = require('passport');
 const User = require('../models/user');
 const Review = require('../models/review');
+const Plate = require('../models/plate');
+
+const bodyParser = require('body-parser');
+
+const jsonParser = bodyParser.json();
+
 const router = express.Router();
 
 // const jwtAuth = passport.authenticate('jwt', {
@@ -25,23 +31,67 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', jsonParser, (req, res, next) => {
   let user = req.body.username;
-  console.log('usernme:', user);
+  let plateNumber = req.body.plateNumber;
+  let reviewerId = req.body.reviewerId;
+  let isPositive = req.body.rating;
+  let message = req.body.message;
+  let plateState = req.body.plateState;
+
+  console.log('PlateState', plateState);
   
-  const review = new Review({
-    licensePlate: req.body.licensePlate,
-    reviewerId: req.body.id,
-    isPositive: req.body.rating,
-    message: req.body.message,
-    plateId: null,
-    ownerResponse: null
-  });
+  const newReview = {
+    plateNumber: plateNumber.toUpperCase(),
+    reviewerId,
+    message,
+    isPositive,
+    plateState,
+  };
 
-  review.save()
-  .then(res => res.status(201).json({message: 'Handled POST request', createdReview: review}))
-  .catch(err => console.log(err));
+  console.log('NEW REVIEW: ', newReview);
 
+  Plate.findOne({plateNumber, plateState})
+    .then(plate => {
+      if (!plate) {
+        Plate.create({plateNumber, plateState})
+          .then((plate) => {
+            // console.log('new plate object', plate);
+            newReview.plateId = plate._id;
+            Review.create(newReview)
+              .then(data => {
+                if (data.isPositive === 'true') {
+                  Plate.findByIdAndUpdate(newReview.plateId, {$inc: {karma: 1}});
+                  console.log(Plate.karma);
+                } else {
+                  Plate.findByIdAndUpdate(newReview.plateId, {$inc: { karma: -1}});
+                }
+                res.status(201).json(data);
+              })
+              .catch(err => {
+                next(err);
+              });
+          });
+      } else {
+        newReview.plateId = plate._id;
+        Review.create(newReview)
+          .then(data => {
+            if (data.isPositive === 'true') {
+              console.log('updating karma score', 'id:' , newReview.plateId);
+              // Plate.findByIdAndUpdate(newReview.plateId, {$inc: { karma: 1}});
+              Plate.findById(newReview.plateId)
+                .then(plate => plate.updateOne({$inc: {karma: 1}}));
+            } else {
+              Plate.findById(newReview.plateId)
+                .then(plate => plate.updateOne({$inc: {karma: - 1}}));
+            }  
+            res.status(201).json(data);
+          })
+          .catch(err => {
+            next(err);
+          });
+      }
+    });
 });
 
 module.exports = router;

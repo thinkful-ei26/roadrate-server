@@ -27,32 +27,21 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   let user = req.body.username;
-  let id;
-  console.log(user);
-
-  User.findOne({username: user})
-    .then(res => {
-      id = res.id;
-      console.log(id);
-    });
-
+  console.log('usernme:', user);
+  
   const review = new Review({
     licensePlate: req.body.licensePlate,
-    userId: id,
+    reviewerId: req.body.id,
     isPositive: req.body.rating,
-    message: req.body.message
+    message: req.body.message,
+    plateId: null,
+    ownerResponse: null
   });
 
-  review.save().then(result => {
-    console.log(result);
-  })
-    .catch(err => console.log(err));
-  res.status(201).json({
-    message: 'Handled POST request',
-    createdReview: review
-  });
-  
+  review.save()
+  .then(res => res.status(201).json({message: 'Handled POST request', createdReview: review}))
+  .catch(err => console.log(err));
+
 });
-
 
 module.exports = router;

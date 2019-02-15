@@ -23,6 +23,7 @@ const app = express();
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const platesRouter = require('./routes/plates');
+const reviewsRouter = require('./routes/reviews');
 
 // logs all requests
 app.use(
@@ -46,6 +47,7 @@ app.use(express.json());
 
 // Mount routers
 app.use('/api/users', usersRouter);
+app.use('/api/reviews', reviewsRouter);
 app.use('/api', authRouter);
 app.use('/api', platesRouter);
 

@@ -7,16 +7,14 @@ const ReviewSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Plate'
   }, 
-  // userId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User',
-  // },
   reviewerId: {
-    type: String, 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
-  licensePlate: {
+  plateNumber: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   isPositive: {
     type: Boolean, 
@@ -28,7 +26,13 @@ const ReviewSchema = new mongoose.Schema({
   },
   ownerResponse: {
     type: String,
+  },
+  state: {
+    type: String,
+    required: true
   }
 });
+
+ReviewSchema.set('timestamps', true);
 
 module.exports = mongoose.model('Review', ReviewSchema);

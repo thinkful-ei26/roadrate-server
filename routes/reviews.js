@@ -60,12 +60,6 @@ router.post('/', jsonParser, (req, res, next) => {
             newReview.plateId = plate._id;
             Review.create(newReview)
               .then(data => {
-                if (data.isPositive === 'true') {
-                  Plate.findByIdAndUpdate(newReview.plateId, {$inc: {karma: 1}});
-                  console.log(Plate.karma);
-                } else {
-                  Plate.findByIdAndUpdate(newReview.plateId, {$inc: { karma: -1}});
-                }
                 res.status(201).json(data);
               })
               .catch(err => {

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 // car type validation for user claiming a plate
 
 const PlateSchema = new mongoose.Schema({
-  plateNumber : { 
+  plateNumber: { 
     type : String, 
     required: true, 
     unique: true 
@@ -18,13 +18,16 @@ const PlateSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User'
   },
-  state: { // US state (like MA)
+  plateState: { // US state (like MA)
     type: String, 
-    required: true
+    // required: true
   },
   karma: {
     type: Number,
     default: 0
+  },
+  numberOfReviews: {
+    type: Number,
   }
 });
 

@@ -22,7 +22,7 @@ const users = [
 const plates = [
   {
     _id: '000000000000000000000001',
-    plateNumber: '123YOLO', 
+    plateNumber: '123-YOLO', 
     carType: 'Truck', 
     userId: '000000000000000000000001',
     state: 'MA', 
@@ -30,10 +30,10 @@ const plates = [
   },
   {
     _id: '000000000000000000000002',
-    plateNumber: '456YOLO', 
+    license: '456-YOLO', 
     carType: 'Van', 
     userId: '000000000000000000000002',
-    state: 'MI', 
+    state: 'PA', 
     karma: 10
   },
 ];
@@ -41,44 +41,45 @@ const plates = [
 const reviews = [
   {
     plateId: '000000000000000000000001',
-    userId: '000000000000000000000001',
-    plateNumber: '456YOLO',
+    reviewerId: '000000000000000000000001',
+    plateNumber: '123-YOLO',
+    state: 'MA',
     isPositive: true, 
-    message: 'Good Driver!',
-    state: 'MI', 
-    ownerResponse: 'Nothing to see here'
+    message: 'Pulled over and gave me her cell phone so I could call AAA after my phone battery died and had broken down.  Praise Hands',
+    ownerResponse: 'No problem at all.  I couldnt just leave you there!'
   },
   {
     plateId: '000000000000000000000001',
-    userId: '000000000000000000000002',
-    plateNumber: '123YOLO',
+    reviewerId: '000000000000000000000002',
+    plateNumber: '123-YOLO',
+    state: 'MA',
     isPositive: false, 
-    message: 'Needs Improvement',
-    state: 'MI', 
-    ownerResponse: 'Nothing to see here'
+    message: 'Shifts between lanes like a mad woman',
+    ownerResponse: 'I was running late for work!'
   },
   {
     plateId: '000000000000000000000001',
-    userId: '000000000000000000000001',
-    plateNumber: '456YOLO',
+    reviewerId: '000000000000000000000001',
+    plateNumber: '123-YOLO',
+    state: 'MA',
     isPositive: true, 
     message: 'Good Driver!',
-    state: 'MI', 
-    ownerResponse: 'Nothing to see here'
+    ownerResponse: 'Thanks!'
   },
   {
     plateId: '000000000000000000000002',
-    userId: '000000000000000000000002',
-    plateNumber: '123YOLO',
+    reviewerId: '000000000000000000000002',
+    plateNumber: '456-YOLO',
+    state: 'MA',
     isPositive: false, 
-    message: 'Needs Improvement',
-    state: 'MI', 
-    ownerResponse: 'Nothing to see here'
+    message: 'Cut my off on i95 while driving like a lunatic!  Almost crashed into me and 3 other people',
+    ownerResponse: 'My wife was having a baby in the backseat, and I needed to rush to the hospital.  Sorry about that!  It\'s a GIRL!! '
   },
   {
     plateId: '000000000000000000000002',
-    userId: '000000000000000000000001',
-    plateNumber: '123YOLO',
+    reviewerId: '000000000000000000000001',
+    plateNumber: '456-YOLO',
+    state: 'PA',
     isPositive: true, 
     message: 'Helped me change my car tire!',
     state: 'MI', 
@@ -86,12 +87,11 @@ const reviews = [
   },
   {
     plateId: '000000000000000000000002',
-    userId: '000000000000000000000002',
-    plateNumber: '456YOLO',
+    reviewerId: '000000000000000000000002',
+    plateNumber: '456-YOLO',
+    state: 'PA',
     isPositive: false, 
-    message: 'Parked 5 feet from the curb and was affecting traffic getting downt the street.  7 thumbs down!!',
-    state: 'MI', 
-    ownerResponse: 'Nothing to see here'
+    message: 'Parked 5 feet from the curb and was affecting traffic getting downt the street.  7 thumbs down!!'
   }
 ];
 

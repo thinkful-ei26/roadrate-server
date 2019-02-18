@@ -22,7 +22,7 @@ const users = [
 const plates = [
   {
     _id: '000000000000000000000001',
-    license: '123YOLO', 
+    plateNumber: '123YOLO', 
     carType: 'Truck', 
     userId: '000000000000000000000001',
     state: 'MA', 
@@ -30,7 +30,7 @@ const plates = [
   },
   {
     _id: '000000000000000000000002',
-    license: '456YOLO', 
+    plateNumber: '456YOLO', 
     carType: 'Van', 
     userId: '000000000000000000000002',
     state: 'MI', 
@@ -42,43 +42,55 @@ const reviews = [
   {
     plateId: '000000000000000000000001',
     userId: '000000000000000000000001',
+    plateNumber: '456YOLO',
     isPositive: true, 
     message: 'Good Driver!',
+    state: 'MI', 
     ownerResponse: 'Nothing to see here'
   },
   {
     plateId: '000000000000000000000001',
     userId: '000000000000000000000002',
+    plateNumber: '123YOLO',
     isPositive: false, 
     message: 'Needs Improvement',
+    state: 'MI', 
     ownerResponse: 'Nothing to see here'
   },
   {
     plateId: '000000000000000000000001',
     userId: '000000000000000000000001',
+    plateNumber: '456YOLO',
     isPositive: true, 
     message: 'Good Driver!',
+    state: 'MI', 
     ownerResponse: 'Nothing to see here'
   },
   {
     plateId: '000000000000000000000002',
     userId: '000000000000000000000002',
+    plateNumber: '123YOLO',
     isPositive: false, 
     message: 'Needs Improvement',
+    state: 'MI', 
     ownerResponse: 'Nothing to see here'
   },
   {
     plateId: '000000000000000000000002',
     userId: '000000000000000000000001',
+    plateNumber: '123YOLO',
     isPositive: true, 
     message: 'Helped me change my car tire!',
+    state: 'MI', 
     ownerResponse: 'Nothing to see here'
   },
   {
     plateId: '000000000000000000000002',
     userId: '000000000000000000000002',
+    plateNumber: '456YOLO',
     isPositive: false, 
     message: 'Parked 5 feet from the curb and was affecting traffic getting downt the street.  7 thumbs down!!',
+    state: 'MI', 
     ownerResponse: 'Nothing to see here'
   }
 ];

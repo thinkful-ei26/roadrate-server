@@ -13,8 +13,7 @@ const ReviewSchema = new mongoose.Schema({
   },
   plateNumber: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   isPositive: {
     type: Boolean, 

@@ -20,7 +20,22 @@ const router = express.Router();
 
 //GET ALL REVIEWS
 router.get('/', (req, res, next) => {
-  Review.find()
+  const { search } = req.query;
+  let filter = {};
+
+  console.log('REQ.QUERY HERE',req.query);
+
+  if (search) {
+    const re = new RegExp(search, 'i');
+    filter.$or = [
+      { 'plateNumber': search },
+      {'message': re},  
+      {'isPositive': re}, 
+      // {'plateId': }
+    ];
+  }
+
+  Review.find(filter)
     .exec()
     .then(docs => {
       console.log(docs);
@@ -28,6 +43,7 @@ router.get('/', (req, res, next) => {
     })
     .catch(err => {
       console.log(err);
+      next(err);
     });
 });
 

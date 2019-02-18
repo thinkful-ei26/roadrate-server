@@ -24,7 +24,6 @@ const PlateSchema = new mongoose.Schema({
   },
   karma: {
     type: Number,
-    default: 0
   },
   numberOfReviews: {
     type: Number,

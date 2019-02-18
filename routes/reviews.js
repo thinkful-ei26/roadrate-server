@@ -54,7 +54,15 @@ router.post('/', jsonParser, (req, res, next) => {
   Plate.findOne({plateNumber, plateState})
     .then(plate => {
       if (!plate) {
-        Plate.create({plateNumber, plateState})
+        let karma;
+        
+        if (isPositive === true) {
+          karma = 1;
+        } else {
+          karma = - 1;
+        }
+        
+        Plate.create({plateNumber, plateState, karma})
           .then((plate) => {
             // console.log('new plate object', plate);
             newReview.plateId = plate._id;

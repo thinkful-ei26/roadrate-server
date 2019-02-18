@@ -7,9 +7,7 @@ const Review = require('../models/review');
 const Plate = require('../models/plate');
 
 const bodyParser = require('body-parser');
-
 const jsonParser = bodyParser.json();
-
 const router = express.Router();
 
 // const jwtAuth = passport.authenticate('jwt', {
@@ -28,7 +26,7 @@ router.get('/', (req, res, next) => {
   if (search) {
     const re = new RegExp(search, 'i');
     filter.$or = [
-      { 'plateNumber': search },
+      {'plateNumber': search.toUpperCase() },
       {'message': re},  
       {'isPositive': re}, 
       // {'plateId': }

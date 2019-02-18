@@ -24,12 +24,11 @@ router.get('/', (req, res, next) => {
   console.log('REQ.QUERY HERE',req.query);
 
   if (search) {
-    const re = new RegExp(search, 'i');
+    // const re = new RegExp(search, 'i');
     filter.$or = [
       {'plateNumber': search.toUpperCase() },
-      {'message': re},  
-      {'isPositive': re}, 
-      // {'plateId': }
+      // {'message': re},  
+      // {'isPositive': re}, 
     ];
   }
 
@@ -69,7 +68,7 @@ router.post('/', jsonParser, (req, res, next) => {
     .then(plate => {
       if (!plate) {
         let karma;
-        
+
         if (isPositive === true) {
           karma = 1;
         } else {

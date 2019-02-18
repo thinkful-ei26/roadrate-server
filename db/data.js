@@ -82,7 +82,6 @@ const reviews = [
     state: 'PA',
     isPositive: true, 
     message: 'Helped me change my car tire!',
-    state: 'MI', 
     ownerResponse: 'Nothing to see here'
   },
   {

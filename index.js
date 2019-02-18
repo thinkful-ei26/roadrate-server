@@ -48,8 +48,8 @@ app.use(express.json());
 // Mount routers
 app.use('/api/users', usersRouter);
 app.use('/api/reviews', reviewsRouter);
+app.use('/api/plates', platesRouter);
 app.use('/api', authRouter);
-app.use('/api', platesRouter);
 
 // Error handlers
 app.use(error404);

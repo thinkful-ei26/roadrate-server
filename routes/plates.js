@@ -21,27 +21,18 @@ router.get('/', (req, res, next) => {
   const { search, state } = req.query;
   let filter = {};
 
-  console.log('REQ.QUERY HERE',req.query);
-
   if (search && state) {
-    const re = new RegExp(search, 'i');
-    filter.$or = [
-      {'plateNumber': search.toUpperCase() },
-      {'plateState': state},
-      {'message': re},  
-      {'isPositive': re} 
-      // {'plateId': }
+    filter.$and = [
+      { $or: [{'plateNumber': search.toUpperCase() }, {'plateState': state}] }
     ];
   }
 
   Plate.find(filter)
     .exec()
     .then(docs => {
-      console.log(docs);
       res.status(200).json(docs);
     })
     .catch(err => {
-      console.log(err);
       next(err);
     });
 });
@@ -83,20 +74,16 @@ router.post('/', jsonParser, (req, res, next) => {
 });
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
-router.put('/:userid', (req, res, next) => {
-  const { userid } = req.params;
-  console.log('REQ.BODY from put: ',req.body);
+router.put('/:userId', (req, res, next) => {
+  const { userId } = req.params;
+  const plateNumber = req.body.plateNumber;
+  console.log('REQ.BODY from put: ',req.body.plateNumber);
+  console.log(userId);
  
-  User.findById(userid)
-    .then( user => {
-      console.log('user on PUT', user);
-      return User.findByIdAndUpdate(
-        userid,
-        { 
-          plateid: 'STATIC PLATE ID'
-        },
-        { new: true }
-      ); 
+  Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { userId: userId })
+    .then( plate => {
+      console.log('plate on PUT', plate);
+      return plate;
     })
     .then(() => res.sendStatus(204))
     .catch(err => next(err));

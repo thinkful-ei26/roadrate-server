@@ -30,4 +30,20 @@ const PlateSchema = new mongoose.Schema({
   }
 });
 
+PlateSchema.set('toJSON', {
+  virtuals: true, 
+  transform: (doc, result) => {
+    delete result._id; //This is the reviewId
+    delete result.__v;
+  }
+});
+
+PlateSchema.methods.serialize = function() {
+  return {
+    plateNumber: this.plateNumber,
+    plateState: this.plateState,
+    karma: this.karma,
+  };
+};
+
 module.exports = mongoose.model('Plate', PlateSchema);

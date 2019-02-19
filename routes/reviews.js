@@ -24,9 +24,9 @@ router.get('/', (req, res, next) => {
   console.log('REQ.QUERY HERE',req.query);
 
   if (search) {
-    // const re = new RegExp(search, 'i');
+    const re = new RegExp(search, 'i');
     filter.$or = [
-      {'plateNumber': search.toUpperCase() },
+      {'plateNumber': re },
       // {'message': re},  
       // {'isPositive': re}, 
     ];

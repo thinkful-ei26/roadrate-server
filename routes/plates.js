@@ -22,15 +22,20 @@ router.get('/', (req, res, next) => {
   let filter = {};
 
   if (search && state) {
-    filter.$and = [
-      { $or: [{'plateNumber': search.toUpperCase() }, {'plateState': state}] }
-    ];
+    // filter.$and = [
+    //   { $or: [{'plateNumber': search.toUpperCase() }, {'plateState': state}] }
+    // ];
+    filter = {
+      plateNumber: search.toUpperCase(), 
+      plateState: state
+    };
   }
 
   Plate.find(filter)
     .exec()
     .then(docs => {
-      res.status(200).json(docs);
+      console.log(docs);
+      return res.status(200).json(docs);
     })
     .catch(err => {
       next(err);
@@ -77,7 +82,7 @@ router.post('/', jsonParser, (req, res, next) => {
 router.put('/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
-  console.log('REQ.BODY from put: ',req.body.plateNumber);
+  console.log('REQ.BODY from put: ',req.body);
   console.log(userId);
  
   Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { userId: userId })

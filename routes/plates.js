@@ -3,10 +3,8 @@
 const express = require('express');
 const passport = require('passport');
 const User = require('../models/user');
-
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-
 const router = express.Router();
 const Plate = require('../models/plate');
 
@@ -22,11 +20,13 @@ router.get('/', (req, res, next) => {
   let filter = {};
 
   if (search && state) {
+    const re = new RegExp(search, 'i');
     // filter.$and = [
     //   { $or: [{'plateNumber': search.toUpperCase() }, {'plateState': state}] }
     // ];
     filter = {
-      plateNumber: search.toUpperCase(), 
+      /*  plateNumber: search.toUpperCase(),  */
+      plateNumber: re, 
       plateState: state
     };
   }
@@ -42,6 +42,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
+/* ========== GET ONE PLATE BY ID ========== */
 router.get('/:id', (req, res, next) => {
   let {id} = req.params;
   Plate.findById(id)
@@ -92,12 +93,26 @@ router.put('/:userId', (req, res, next) => {
   console.log('REQ.BODY from put: ',req.body);
   console.log(userId);
  
+  if(!plateNumber){
+    const err = {
+      message: 'Missing `plateNumber` or `userId`',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'post'
+    };
+    return next(err);
+  }
+
   Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { userId: userId })
     .then( plate => {
       console.log('plate on PUT', plate);
       return plate;
     })
-    .then(() => res.sendStatus(204))
+    // .then(() => res.sendStatus(204))
+    .then((data) => {
+      console.log(data);
+      res.status(204).json(data);
+    })
     .catch(err => next(err));
 });
 

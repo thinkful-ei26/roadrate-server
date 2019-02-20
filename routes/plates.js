@@ -42,6 +42,25 @@ router.get('/', (req, res, next) => {
     });
 });
 
+/* ========== GET ALL PLATES USING userId from client ========== */
+router.get('/all/:id', (req, res, next) => {
+  let { id } = req.params;
+
+  if(!id){
+    const err = {
+      message: 'Missing `userId` to fetch plates',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'get'
+    };
+    return next(err);
+  }
+
+  Plate.find({ userId: id })
+    .then(data => res.json(data))
+    .catch(err => next(err));
+});
+
 /* ========== GET ONE PLATE BY ID ========== */
 router.get('/:id', (req, res, next) => {
   let {id} = req.params;

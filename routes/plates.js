@@ -72,9 +72,9 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
 router.post('/', jsonParser, (req, res, next) => {
   let {plateNumber} = req.body;
   let {userId} = req.body;
-  let {state} = req.body;
+  let {plateState} = req.body;
 
-  Plate.create({plateNumber, state, userId})
+  Plate.create({plateNumber, plateState, userId})
     .then(data => res.json(data))
     .catch(err => {
       next(err);

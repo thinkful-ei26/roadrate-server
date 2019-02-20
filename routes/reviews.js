@@ -60,6 +60,21 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
     .catch(err => next(err));
 });
 
+/* ========== GET FILTERED REVIEWS LEFT BY SPECIFIC USER ========== */
+router.get('/:user', (req, res, next) => {
+  let username = req.params.user;
+  console.log(username);
+
+  User.find({username: username})
+    .then(user => {
+      const userId = user[0]._id;   
+      return Review.find({reviewerId: userId})
+        .then(reviews => res.json(reviews))
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
 /* ========== POST/CREATE A REVIEW ========== */
 router.post('/', jsonParser, (req, res, next) => {
   // let user = req.body.username;

@@ -16,7 +16,7 @@ const router = express.Router();
 // });
 // router.use(jwtAuth);
 
-//GET ALL REVIEWS
+/* ========== GET ALL REVIEWS ========== */
 router.get('/', (req, res, next) => {
   const { search } = req.query;
   let filter = {};
@@ -44,8 +44,25 @@ router.get('/', (req, res, next) => {
     });
 });
 
+/* ========== GET FILTERED REVIEWS FOR PLATES ========== */
+router.get('/:plateState/:plateNumber', (req, res, next) => {
+  let plateState = req.params.plateState;
+  let plateNumber = req.params.plateNumber;
+  let filter = {};
+ 
+  filter = {
+    plateState,
+    plateNumber
+  };
+
+  Review.find(filter)
+    .then(data => res.json(data))
+    .catch(err => next(err));
+});
+
+/* ========== POST/CREATE A REVIEW ========== */
 router.post('/', jsonParser, (req, res, next) => {
-  let user = req.body.username;
+  // let user = req.body.username;
   let plateNumber = req.body.plateNumber;
   let reviewerId = req.body.reviewerId;
   let isPositive = req.body.rating;

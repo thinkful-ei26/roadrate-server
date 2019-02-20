@@ -49,13 +49,20 @@ router.get('/:id', (req, res, next) => {
     .catch(err => next(err));
 });
 
+/* ========== FETCH KARMA SCORE ========== */
 router.get('/:plateState/:plateNumber', (req, res, next) => {
   let plateState = req.params.plateState;
   let plateNumber = req.params.plateNumber;
 
-  console.log(req.params);
+  let filter = {};
+ 
+  filter = {
+    plateState,
+    plateNumber
+  };
+  console.log('==== REQ.PARAMS PLATESTATE/PLATENUM ===',req.params);
 
-  Plate.find()
+  Plate.find(filter)
     .then(data => res.json(data))
     .catch(err => next(err));
 });

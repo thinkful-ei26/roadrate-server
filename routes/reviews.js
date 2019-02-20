@@ -86,7 +86,7 @@ router.post('/', jsonParser, (req, res, next) => {
       if (!plate) {
         let karma;
 
-        if (isPositive === true) {
+        if (isPositive === 'true') {
           karma = 1;
         } else {
           karma = - 1;

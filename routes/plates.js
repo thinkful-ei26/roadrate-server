@@ -63,7 +63,18 @@ router.get('/all/:id', (req, res, next) => {
 
 /* ========== GET ONE PLATE BY ID ========== */
 router.get('/:id', (req, res, next) => {
-  let {id} = req.params;
+  let { id }  = req.params;
+
+  if(!id || id === '' ) {
+    const err = {
+      message: 'Missing plate `id`',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'get'
+    };
+    return next(err);
+  }
+
   Plate.findById(id)
     .then(data => res.json(data))
     .catch(err => next(err));

@@ -62,6 +62,7 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
 
 /* ========== GET FILTERED REVIEWS LEFT BY SPECIFIC USER ========== */
 router.get('/:user', (req, res, next) => {
+
   let username = req.params.user;
   console.log(username);
 
@@ -72,6 +73,27 @@ router.get('/:user', (req, res, next) => {
         .then(reviews => res.json(reviews))
         .catch(err => next(err));
     })
+    .catch( err => next(err));
+
+});
+    
+
+/* ========== GET ONE REVIEW BY ID ========== */
+router.get('/:id', (req, res, next) => {
+  let { id }  = req.params;
+
+  if(!id || id === '' ) {
+    const err = {
+      message: 'Missing review `id`',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'get'
+    };
+    return next(err);
+  }
+
+  Review.findById(id)
+    .then(data => res.json(data))
     .catch(err => next(err));
 });
 

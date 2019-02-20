@@ -3,10 +3,8 @@
 const express = require('express');
 const passport = require('passport');
 const User = require('../models/user');
-
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-
 const router = express.Router();
 const Plate = require('../models/plate');
 
@@ -22,21 +20,29 @@ router.get('/', (req, res, next) => {
   let filter = {};
 
   if (search && state) {
-    filter.$and = [
-      { $or: [{'plateNumber': search.toUpperCase() }, {'plateState': state}] }
-    ];
+    const re = new RegExp(search, 'i');
+    // filter.$and = [
+    //   { $or: [{'plateNumber': search.toUpperCase() }, {'plateState': state}] }
+    // ];
+    filter = {
+      /*  plateNumber: search.toUpperCase(),  */
+      plateNumber: re, 
+      plateState: state
+    };
   }
 
   Plate.find(filter)
     .exec()
     .then(docs => {
-      res.status(200).json(docs);
+      console.log(docs);
+      return res.status(200).json(docs);
     })
     .catch(err => {
       next(err);
     });
 });
 
+/* ========== GET ONE PLATE BY ID ========== */
 router.get('/:id', (req, res, next) => {
   let {id} = req.params;
   Plate.findById(id)
@@ -44,13 +50,20 @@ router.get('/:id', (req, res, next) => {
     .catch(err => next(err));
 });
 
+/* ========== FETCH KARMA SCORE ========== */
 router.get('/:plateState/:plateNumber', (req, res, next) => {
   let plateState = req.params.plateState;
   let plateNumber = req.params.plateNumber;
 
-  console.log(req.params);
+  let filter = {};
+ 
+  filter = {
+    plateState,
+    plateNumber
+  };
+  console.log('==== REQ.PARAMS PLATESTATE/PLATENUM ===',req.params);
 
-  Plate.find()
+  Plate.find(filter)
     .then(data => res.json(data))
     .catch(err => next(err));
 });
@@ -77,15 +90,29 @@ router.post('/', jsonParser, (req, res, next) => {
 router.put('/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
-  console.log('REQ.BODY from put: ',req.body.plateNumber);
+  console.log('REQ.BODY from put: ',req.body);
   console.log(userId);
  
+  if(!plateNumber){
+    const err = {
+      message: 'Missing `plateNumber` or `userId`',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'post'
+    };
+    return next(err);
+  }
+
   Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { userId: userId })
     .then( plate => {
       console.log('plate on PUT', plate);
       return plate;
     })
-    .then(() => res.sendStatus(204))
+    // .then(() => res.sendStatus(204))
+    .then((data) => {
+      console.log(data);
+      res.status(204).json(data);
+    })
     .catch(err => next(err));
 });
 

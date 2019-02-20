@@ -44,6 +44,26 @@ router.get('/', (req, res, next) => {
     });
 });
 
+router.get('/:state/:plateNumber', (req, res, next) => {
+  const {state} = req.params;
+  const {plateNumber} = req.params;
+
+  let filter = {plateState: state, plateNumber};
+
+  console.log(filter)
+
+  Review.find(filter)
+    .exec()
+    .then(docs => {
+      console.log('----------hello', docs);
+      res.status(200).json(docs);
+    })
+    .catch(err => {
+      console.log(err);
+      next(err);
+    });
+});
+
 router.post('/', jsonParser, (req, res, next) => {
   let user = req.body.username;
   let plateNumber = req.body.plateNumber;
@@ -55,7 +75,7 @@ router.post('/', jsonParser, (req, res, next) => {
   console.log('PlateState', plateState);
   
   const newReview = {
-    plateNumber: plateNumber.toUpperCase(),
+    plateNumber,
     reviewerId,
     message,
     isPositive,

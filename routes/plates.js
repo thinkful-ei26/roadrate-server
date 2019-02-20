@@ -54,12 +54,17 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.get('/:plateState/:plateNumber', (req, res, next) => {
-  let plateState = req.params.plateState;
-  let plateNumber = req.params.plateNumber;
+  let state = req.params.plateState;
+  let plate = req.params.plateNumber;
 
-  console.log(req.params);
+  let filter = {};
 
-  Plate.find()
+  filter = {
+    plateState: state,
+    plateNumber: plate.toLowerCase(),
+  };
+
+  Plate.find(filter)
     .then(data => res.json(data))
     .catch(err => next(err));
 });

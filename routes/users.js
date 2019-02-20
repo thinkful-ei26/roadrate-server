@@ -5,6 +5,7 @@ const router = express.Router();
 
 const User = require('../models/user');
 
+/* ====== GET ALL USERS ====== */
 router.get('/', (req, res, next) => {
   const { search } = req.query;
   let filter = {};
@@ -22,10 +23,30 @@ router.get('/', (req, res, next) => {
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
+/* ======= GET USER BY ID - !!!DELETE IN PRODUCTION!!!! ===== */
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+
+  console.log('this is the userid: ',id);
+  if(!id || id === '' ) {
+    const err = {
+      message: 'Missing user `id`',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'get'
+    };
+    return next(err);
+  }
+
+  return User
+    .findById(id)
+    .then(user => res.json(user))
+    .catch(err => next(err));
+});
+
 /* POST/CREATE user on /api/users */
 router.post('/', (req, res, next) => {
 
-  console.log('here')
   const requiredFields = ['username', 'password', 'email'];
   const missingField = requiredFields.find(field => !(field in req.body));
         

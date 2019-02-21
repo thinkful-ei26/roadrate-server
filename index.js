@@ -5,10 +5,10 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport'); 
+const mongoose = require('mongoose');
 
 const { error404, error500 } = require('./error-middleware');
-const { PORT, CLIENT_ORIGIN } = require('./config');
-const { dbConnect } = require('./db-mongoose');
+const { PORT, CLIENT_ORIGIN, MONGODB_URI } = require('./config');
 
 // Security
 const localStrategy = require('./passport/local');
@@ -67,7 +67,12 @@ function runServer(port = PORT) {
 }
 
 if (require.main === module) {
-  dbConnect();
+  mongoose.connect(MONGODB_URI, { useNewUrlParser:true }) //Mongo will automatically create the db here if it doesnt exist, and then mongoose will automatically create any collections that dont already exist by going through your models
+  .catch(err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error('\n === Did you remember to start `mongod`? === \n');
+    console.error(err);
+  });
   runServer();
 }
 

@@ -162,4 +162,16 @@ router.post('/', jsonParser, (req, res, next) => {
     });
 });
 
+router.put('/:id', jsonParser, (req, res, next) => {
+  const {id} = req.params;
+  const {ownerResponse} = req.body;
+
+  console.log('id', id);
+  console.log('response', ownerResponse);
+  
+  Review.findOneAndUpdate({_id: id}, {ownerResponse: ownerResponse}, {new: true})
+    .then(review => res.json(review))
+    .catch(err => next(err));
+});
+
 module.exports = router;

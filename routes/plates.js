@@ -57,11 +57,12 @@ router.get('/all/:id', (req, res, next) => {
   }
 
   Plate.find({ userId: id })
-    .then(data => res.json(data))
+    .exec()
+    .then(data => res.status(200).json(data))
     .catch(err => next(err));
 });
 
-/* ========== GET ONE PLATE BY ID ========== */
+/* ========== GET ONE PLATE BY PLATE ID ========== */
 router.get('/:id', (req, res, next) => {
   let { id }  = req.params;
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const passport = require('passport');
+// const passport = require('passport');
 const User = require('../models/user');
 const Review = require('../models/review');
 const Plate = require('../models/plate');
@@ -77,7 +77,6 @@ router.get('/:user', (req, res, next) => {
 
 });
     
-
 /* ========== GET ONE REVIEW BY ID ========== */
 router.get('/:id', (req, res, next) => {
   let { id }  = req.params;

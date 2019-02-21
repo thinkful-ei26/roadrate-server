@@ -13,8 +13,8 @@ router.get('/', (req, res, next) => {
   console.log(req.query);
 
   if (search) {
-    const re = new RegExp(search, 'i');
-    filter.$or = [{ 'username': re }];
+    // const re = new RegExp(search, 'i');
+    filter.$or = [{ 'username': search }];
   }
 
   return User

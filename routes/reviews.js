@@ -18,24 +18,34 @@ const router = express.Router();
 
 /* ========== GET ALL REVIEWS ========== */
 router.get('/', (req, res, next) => {
-  const { search } = req.query;
+  const { number } = req.query;
+  const { state } = req.query;
   let filter = {};
 
   console.log('REQ.QUERY HERE',req.query);
 
-  if (search) {
-    const re = new RegExp(search, 'i');
-    filter.$or = [
-      {'plateNumber': re },
-      // {'message': re},  
-      // {'isPositive': re}, 
-    ];
+  const re = new RegExp(number, 'i');
+
+  if (number && !state) {
+    filter = {
+      plateNumber: re,
+    };
+  } else if (!number && state) {
+    filter = {
+      plateState: state,
+    };
+  } else if (number && state) {
+    filter = {
+      plateState: state,
+      plateNumber: re,
+    };
   }
+
+  console.log('filtering for:', filter);
 
   Review.find(filter)
     .exec()
     .then(docs => {
-      console.log(docs);
       res.status(200).json(docs);
     })
     .catch(err => {

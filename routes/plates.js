@@ -109,7 +109,7 @@ router.post('/', jsonParser, (req, res, next) => {
     });
 });
 
-/* ========== PUT/UPDATE A SINGLE ITEM ========== */
+/* ========== CLAIM A PLATE PUT/UPDATE using userId  ========== */
 router.put('/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
@@ -132,6 +132,35 @@ router.put('/:userId', (req, res, next) => {
       return plate;
     })
     // .then(() => res.sendStatus(204))
+    .then((data) => {
+      console.log(data);
+      res.status(204).json(data);
+    })
+    .catch(err => next(err));
+});
+
+/* ========== UNCLAIM A PLATE PUT/UPDATE using userId  ========== */
+router.put('/unclaim/:userId', (req, res, next) => {
+  const { userId } = req.params;
+  const plateNumber = req.body.plateNumber;
+  console.log('REQ.BODY from UNCLAIM PUT: ',req.body);
+  console.log('USER ID: ', userId);
+ 
+  if(!plateNumber){
+    const err = {
+      message: 'Missing `plateNumber` or `userId`',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'PUT'
+    };
+    return next(err);
+  }
+
+  Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { $unset: { userId: userId }})
+    .then( plate => {
+      console.log('plate on PUT unset', plate);
+      return plate;
+    })
     .then((data) => {
       console.log(data);
       res.status(204).json(data);

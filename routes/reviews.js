@@ -44,6 +44,7 @@ router.get('/', (req, res, next) => {
   console.log('filtering for:', filter);
 
   Review.find(filter)
+    .sort({'updatedAt': -1})
     .exec()
     .then(docs => {
       res.status(200).json(docs);

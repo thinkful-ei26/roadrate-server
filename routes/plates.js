@@ -1,18 +1,11 @@
 'use strict';
 
 const express = require('express');
-const passport = require('passport');
-const User = require('../models/user');
 const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
-const router = express.Router();
 const Plate = require('../models/plate');
 
-// const jwtAuth = passport.authenticate('jwt', {
-//   session: false,
-//   failWithError: true
-// });
-// router.use(jwtAuth);
+const router = express.Router();
+const jsonParser = bodyParser.json();
 
 /* ========== GET ALL PLATES ========== */
 router.get('/', (req, res, next) => {
@@ -38,11 +31,12 @@ router.get('/', (req, res, next) => {
       return res.status(200).json(docs);
     })
     .catch(err => {
+      console.log('error on get all plates: ', err);
       next(err);
     });
 });
 
-/* ========== GET ALL PLATES USING userId from client ========== */
+/* ===== GET ALL PLATES USING userId from client ===== */
 router.get('/all/:id', (req, res, next) => {
   let { id } = req.params;
 
@@ -101,20 +95,18 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
 
 /* ========== POST A PLATE ========== */
 router.post('/', jsonParser, (req, res, next) => {
-  let {plateNumber} = req.body;
-  let {userId} = req.body;
-  let {plateState} = req.body;
+  let {plateNumber, userId, plateState } = req.body;
+  console.log('plate POST req.body ', req.body);
 
   Plate.create({plateNumber, plateState, userId})
-    .then(data => res.json(data))
+    .then(data => {
+      console.log('is the newplate creating?', data);
+      return res.json(data);
+    })
     .catch(err => {
+      console.log('error on post: ', err);
       next(err);
     });
-
-  // console.log('REQ.BODY ON POST PLATE', req.body);
-  // res.json({
-  //   message: 'returning something on post plate'
-  // });
 });
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */

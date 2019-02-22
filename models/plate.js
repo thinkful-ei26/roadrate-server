@@ -8,7 +8,7 @@ const PlateSchema = new mongoose.Schema({
   plateNumber: { 
     type : String, 
     required: true, 
-    unique: true 
+    // unique: true 
   },
   carType: {
     type: String,

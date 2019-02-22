@@ -140,13 +140,13 @@ router.post('/', (req, res, next) => {
       return res.status(201).json(user.serialize());
     })
     .catch( err => {
-      if(err.code === 11000 ) { //11000 is a mongo error code that checks for duplicate username
-        err = new Error('The username already exists');
-        err.status = 422;
-        err.location = 'username';
-        err.reason = 'ValidationError';
-
-        return Promise.reject(err);
+      if (err.code === 11000) {
+        err = {
+          message: 'The username already exists',
+          reason: 'ValidationError',
+          location: 'username',
+          status: 422
+        }; 
       }
       next(err);
     });

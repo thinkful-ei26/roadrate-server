@@ -13,9 +13,7 @@ const { dbConnect } = require('./db-mongoose');
 
 // Security
 const localStrategy = require('./passport/local');
-passport.use(localStrategy);
 const jwtStrategy = require('./passport/jwt');
-passport.use(jwtStrategy);
 
 // Create an Express application
 const app = express();
@@ -46,11 +44,14 @@ app.use(express.static('public'));
 // Parse request body
 app.use(express.json());
 
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 // Mount routers
 app.use('/api/users', usersRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/plates', platesRouter);
-app.use('/api', authRouter);
+app.use('/api/auth', authRouter);
 
 // Error handlers
 app.use(error404);

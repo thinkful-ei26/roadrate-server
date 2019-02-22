@@ -1,9 +1,8 @@
 'use strict';
 const express = require('express');
-const mongoose = require('mongoose');
-const router = express.Router();
-
 const User = require('../models/user');
+
+const router = express.Router();
 
 /* ====== GET ALL USERS ====== */
 router.get('/', (req, res, next) => {

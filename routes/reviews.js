@@ -40,7 +40,7 @@ router.get('/', (req, res, next) => {
       plateNumber: re,
     };
   }
-
+  
   console.log('filtering for:', filter);
 
   Review.find(filter)

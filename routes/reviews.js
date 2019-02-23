@@ -55,6 +55,15 @@ router.get('/', (req, res, next) => {
     });
 });
 
+/* ========== GET REVIEWS BY PLATEID ========== */
+router.get('/:plateId', (req, res, next) => {
+  let plateId = req.params.plateId;
+
+  Review.find({plateId})
+    .then(data => res.json(data))
+    .catch(err => next(err));
+});
+
 /* ========== GET FILTERED REVIEWS FOR PLATES ========== */
 router.get('/:plateState/:plateNumber', (req, res, next) => {
   let plateState = req.params.plateState;

@@ -64,6 +64,15 @@ router.get('/my-plates/:plateId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+/* ========== GET FILTERED REVIEWS BY PLATEID (for public plate)  ========== */
+router.get('/plate/:plateId', (req, res, next) => {
+  let plateId = req.params.plateId;
+ 
+  Review.find({plateId})
+    .then(data => res.json(data))
+    .catch(err => next(err));
+});
+
 /* ========== GET FILTERED REVIEWS FOR PLATES ========== */
 router.get('/:plateState/:plateNumber', (req, res, next) => {
   let plateState = req.params.plateState;

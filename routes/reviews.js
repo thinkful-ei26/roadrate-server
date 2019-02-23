@@ -56,7 +56,7 @@ router.get('/', (req, res, next) => {
 });
 
 /* ========== GET REVIEWS BY PLATEID ========== */
-router.get('/:plateId', (req, res, next) => {
+router.get('/my-plates/:plateId', (req, res, next) => {
   let plateId = req.params.plateId;
 
   Review.find({plateId})

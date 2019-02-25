@@ -59,6 +59,24 @@ router.get('/', (req, res, next) => {
     });
 });
 
+/* ========== GET REVIEWS BY PLATEID ========== */
+router.get('/my-plates/:plateId', (req, res, next) => {
+  let plateId = req.params.plateId;
+
+  Review.find({plateId})
+    .then(data => res.json(data))
+    .catch(err => next(err));
+});
+
+/* ========== GET FILTERED REVIEWS BY PLATEID (for public plate)  ========== */
+router.get('/plate/:plateId', (req, res, next) => {
+  let plateId = req.params.plateId;
+ 
+  Review.find({plateId})
+    .then(data => res.json(data))
+    .catch(err => next(err));
+});
+
 /* ========== GET FILTERED REVIEWS FOR PLATES ========== */
 router.get('/:plateState/:plateNumber', (req, res, next) => {
   let plateState = req.params.plateState;
@@ -75,15 +93,34 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// /* ========== GET FILTERED REVIEWS LEFT BY SPECIFIC USER ========== */
+// router.get('/:user', (req, res, next) => {
+
+//   let username = req.params.user;
+//   console.log(username);
+
+//   User.find({username: username})
+//     .then(user => {
+//       const userId = user[0]._id;   
+//       return Review.find({reviewerId: userId})
+//         .then(reviews => res.json(reviews))
+//         .catch(err => next(err));
+//     })
+//     .catch( err => next(err));
+
+// });
+
 /* ========== GET FILTERED REVIEWS LEFT BY SPECIFIC USER ========== */
-router.get('/:user', (req, res, next) => {
+// this is the same code above but uses the userId to fetch reviews & filter 
+router.get('/:userId', (req, res, next) => {
 
-  let username = req.params.user;
-  console.log(username);
+  let userId = req.params.userId;
+  console.log(userId);
 
-  User.find({username: username})
+  User.find({id: userId})
     .then(user => {
-      const userId = user[0]._id;   
+      console.log('user: ',user);
+      // const userId = user[0]._id;   
       return Review.find({reviewerId: userId})
         .then(reviews => res.json(reviews))
         .catch(err => next(err));

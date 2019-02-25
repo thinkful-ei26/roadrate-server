@@ -32,15 +32,15 @@ const PlateSchema = new mongoose.Schema({
   },
 });
 
-PlateSchema.index({ plateNumber: 1, plateState: 1, }, {unique: true, dropDups: true, partialFilterExpression: {plateState: {$exists: true} }})
-PlateSchema.set({ autoIndex: false })
+PlateSchema.index({ plateNumber: 1, plateState: 1, }, {unique: true, dropDups: true, partialFilterExpression: {plateState: {$exists: true} }});
+PlateSchema.set({ autoIndex: false });
 mongoose.set('debug', true);
 
 PlateSchema.on('index', function(error) {
   console.log('error 49', error.message);
 });
 
-const Plate = mongoose.model('Plate', PlateSchema)
+const Plate = mongoose.model('Plate', PlateSchema);
 Plate.createIndexes({plateNumber : 1, plateState : -1 }, function(err, result) {
   console.log('result', result);
   return (result);
@@ -48,7 +48,7 @@ Plate.createIndexes({plateNumber : 1, plateState : -1 }, function(err, result) {
 
 Plate.on('index', function (err) {
   if (err) console.error('index creation', err); // error occurred during index creation
-})
+});
 
 PlateSchema.set('toJSON', {
   virtuals: true, 

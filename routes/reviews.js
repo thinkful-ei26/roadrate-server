@@ -20,6 +20,9 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   const { number } = req.query;
   const { state } = req.query;
+  // const start = req.query.start;
+  // const count = req.query.count;
+
   let filter = {};
 
   console.log('REQ.QUERY HERE',req.query);
@@ -47,6 +50,7 @@ router.get('/', (req, res, next) => {
     .sort({'updatedAt': -1})
     .exec()
     .then(docs => {
+      // docs = docs.slice(start, start+count);
       res.status(200).json(docs);
     })
     .catch(err => {

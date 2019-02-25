@@ -60,12 +60,4 @@ PlateSchema.set('toJSON', {
   },
 });
 
-PlateSchema.methods.serialize = function() {
-  return {
-    plateNumber: this.plateNumber,
-    plateState: this.plateState,
-    karma: this.karma,
-  };
-};
-
 module.exports = mongoose.model('Plate', PlateSchema);

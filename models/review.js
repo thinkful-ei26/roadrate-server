@@ -42,13 +42,4 @@ ReviewSchema.set('toJSON', {
   }
 });
 
-ReviewSchema.methods.serialize = function() {
-  return {
-    plateId: this.plateId,
-    message: this.message,
-    plateNumber: this.plateNumber,
-    plateState: this.plateState
-  };
-};
-
 module.exports = mongoose.model('Review', ReviewSchema);

@@ -113,6 +113,7 @@ router.post('/', jsonParser, (req, res, next) => {
 router.put('/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
+  const plateState = req.body.plateState;
   console.log('REQ.BODY from put: ',req.body);
   console.log(userId);
  
@@ -126,7 +127,7 @@ router.put('/:userId', (req, res, next) => {
     return next(err);
   }
 
-  Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { userId: userId })
+  Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState } , { userId: userId })
     .then( plate => {
       console.log('plate on PUT', plate);
       return plate;
@@ -143,6 +144,7 @@ router.put('/:userId', (req, res, next) => {
 router.put('/unclaim/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
+  const plateState = req.body.plateState;
   console.log('REQ.BODY from UNCLAIM PUT: ',req.body);
   console.log('USER ID: ', userId);
  

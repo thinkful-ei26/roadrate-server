@@ -32,8 +32,8 @@ const PlateSchema = new mongoose.Schema({
   },
 });
 
-PlateSchema.index({ plateNumber: 1, plateState: 1, }, {unique: true, dropDups: true, partialFilterExpression: {plateState: {$exists: true} }})
-PlateSchema.set({ autoIndex: false })
+PlateSchema.index({ plateNumber: 1, plateState: 1, }, {unique: true, dropDups: true, partialFilterExpression: {plateState: {$exists: true} }});
+PlateSchema.set({ autoIndex: false });
 mongoose.set('debug', true);
 
 PlateSchema.on('index', function(error) {
@@ -48,22 +48,16 @@ Plate.createIndexes({plateNumber : 1, plateState : 1 },  function(err, result) {
 
 Plate.on('index', function (err) {
   if (err) console.error('index creation', err); // error occurred during index creation
-})
+});
 
 PlateSchema.set('toJSON', {
   virtuals: true, 
   transform: (doc, result) => {
     delete result._id; //This is the reviewId
     delete result.__v;
+    delete result.userId;
+    
   },
 });
-
-PlateSchema.methods.serialize = function() {
-  return {
-    plateNumber: this.plateNumber,
-    plateState: this.plateState,
-    karma: this.karma,
-  };
-};
 
 module.exports = mongoose.model('Plate', PlateSchema);

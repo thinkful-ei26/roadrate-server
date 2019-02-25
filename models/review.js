@@ -34,4 +34,21 @@ const ReviewSchema = new mongoose.Schema({
 
 ReviewSchema.set('timestamps', true);
 
+ReviewSchema.set('toJSON', {
+  virtuals: true, 
+  transform: (doc, result) => {
+    delete result.reviewerId;
+    delete result.__v;
+  }
+});
+
+ReviewSchema.methods.serialize = function() {
+  return {
+    plateId: this.plateId,
+    message: this.message,
+    plateNumber: this.plateNumber,
+    plateState: this.plateState
+  };
+};
+
 module.exports = mongoose.model('Review', ReviewSchema);

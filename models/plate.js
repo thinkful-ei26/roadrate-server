@@ -41,7 +41,7 @@ PlateSchema.on('index', function(error) {
 });
 
 const Plate = mongoose.model('Plate', PlateSchema)
-Plate.createIndexes({plateNumber : 1, plateState : -1 }, function(err, result) {
+Plate.createIndexes({plateNumber : 1, plateState : 1 },  function(err, result) {
   console.log('result', result);
   return (result);
 });

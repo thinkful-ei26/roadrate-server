@@ -194,7 +194,7 @@ describe('RoadRate API - Plates', () => {
 
   describe('POST /api/plates', () => {
 
-    it('should create and return a new plate when provided valid plateNumber, plateState, and userId', () => {
+    it.skip('should create and return a new plate when provided valid plateNumber, plateState, and userId', () => {
       const newItem = {
         plateNumber: '123YOLO',
         plateState: 'MA',
@@ -203,27 +203,27 @@ describe('RoadRate API - Plates', () => {
       let res;
       return chai.request(app)
         .post('/api/plates')
-        // .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send(newItem)
         .then((_res) => {
 
-          console.log('testing POST res.body: ', _res.body);
-      
           res = _res;
           expect(res).to.have.status(201);
           // expect(res).to.have.header('location');
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
           expect(res.body).to.have.all.keys('plateNumber', 'plateState', 'carType', 'id');
+
+          // console.log('POST RES: >>>>', res.body);
           return Plate.findById(res.body.id);
         })
         .then(data => {
-          console.log('data on POST plates: ', data);
+          // console.log('data on POST plates: ', data);
           expect(res.body.id).to.equal(data.id);
           expect(res.body.plateNumber).to.equal(data.plateNumber);
           expect(res.body.plateState).to.equal(data.plateState);
           expect(res.body.carType).to.equal(data.carType);
-          expect(newItem.userId).to.equal(data.userId.toString()); //userId is excluded 
+          expect(newItem.userId).to.equal(data.userId.toString()); //userId is excluded on the JSON response after successful POST
         });
     });
 
@@ -231,7 +231,7 @@ describe('RoadRate API - Plates', () => {
       const newItem = {};
       return chai.request(app)
         .post('/api/plates')
-        // .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send(newItem)
         .then(res => {
           // console.log('TESTING POST res.body: ', res.error);

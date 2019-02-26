@@ -69,7 +69,7 @@ describe('RoadRate API - Plates', () => {
   });
 
 
-  describe('GET /api/plates', () => {
+  describe.skip('GET /api/plates', () => {
 
     //http://localhost:8080/api/plates/
     it('should return the correct number of Plates', () => {
@@ -146,7 +146,7 @@ describe('RoadRate API - Plates', () => {
   
   }); // end of GET /api/plates
 
-  describe('GET /api/plates/all/:id', () => {
+  describe.skip('GET /api/plates/all/:id', () => {
     it('should return correct plate using the userId', () => {
       let data;
       const userId = '5c7080ea36aad20017f75ef2';
@@ -161,8 +161,8 @@ describe('RoadRate API - Plates', () => {
 
           const [ body ] = res.body;
 
-          console.log('testing res.body: ', body);
-          console.log('testing data', data);
+          // console.log('testing res.body: ', body);
+          // console.log('testing data', data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('array');
@@ -172,10 +172,57 @@ describe('RoadRate API - Plates', () => {
           expect(res.body.plateNumber).to.equal(data.plateNumber);
           expect(res.body.plateState).to.equal(data.plateState);
         });
+    }); //end of it()
+ 
+    it('should respond with status 400 and an error message when `id` is not valid', () => {
+      return chai.request(app)
+        .get('/api/plates/all/NOT-A-VALID-ID')
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Missing `userId` to fetch plates');
+        });
+    }); //end of it()
+
+  }); // end of GET /api/plates/:id
+
+  describe('POST /api/plates', () => {
+
+    it('should create and return a new plate when provided valid plateNumber, plateState, and userId', () => {
+      const newItem = {
+        plateNumber: '123YOLO',
+        plateState: 'MA',
+        userId: '5c712afa1ee8106edae019d5'
+      };
+      let res;
+      return chai.request(app)
+        .post('/api/plates')
+        // .set('Authorization', `Bearer ${token}`)
+        .send(newItem)
+        .then((_res) => {
+
+          console.log('testing res.body: ', _res.body);
+      
+          res = _res;
+          expect(res).to.have.status(201);
+          // expect(res).to.have.header('location');
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          // expect(res.body).to.have.all.keys('plateNumber', 'plateState', 'userId');
+          return Plate.findById(res.body.id);
+        })
+        .then(data => {
+          console.log('data on POST plates: ', data);
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.plateNumber).to.equal(data.plateNumber);
+          expect(res.body.plateState).to.equal(data.plateState);
+          expect(res.body.carType).to.equal(data.carType);
+          expect(newItem.userId).to.equal(data.userId.toString()); //userId is excluded 
+        });
     });
 
 
-  }); // end of GET /api/plates/:id
+  });
+
 
 });//end of ROADRATE PLATES
 

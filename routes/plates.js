@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Plate = require('../models/plate');
+const mongoose = require('mongoose');
 
 const router = express.Router();
 const jsonParser = bodyParser.json();
@@ -36,7 +37,7 @@ router.get('/', (req, res, next) => {
 router.get('/all/:id', (req, res, next) => {
   let { id } = req.params;
 
-  if(!id){
+  if(!mongoose.Types.ObjectId.isValid(id)){
     const err = {
       message: 'Missing `userId` to fetch plates',
       reason: 'MissingContent',
@@ -56,7 +57,7 @@ router.get('/all/:id', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   let { id }  = req.params;
 
-  if(!id || id === '' ) {
+  if(!mongoose.Types.ObjectId.isValid(id) || id === '' ) {
     const err = {
       message: 'Missing plate `id`',
       reason: 'MissingContent',
@@ -94,10 +95,18 @@ router.post('/', jsonParser, (req, res, next) => {
   let {plateNumber, userId, plateState } = req.body;
   console.log('plate POST req.body ', req.body);
 
+  /***** Never trust users - validate input *****/
+  if (!plateNumber || !plateState) {
+    const err = new Error('Missing `plateNumber` or `plateState` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
   Plate.create({plateNumber, plateState, userId})
     .then(data => {
       console.log('is the newplate creating?', data);
-      return res.json(data);
+      // return res.json(data);
+      return res.location(`${req.originalUrl}/${data.id}`).status(201).json(data);
     })
     .catch(err => {
       console.log('error on post: ', err);

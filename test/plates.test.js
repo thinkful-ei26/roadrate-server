@@ -53,7 +53,7 @@ describe('RoadRate API - Plates', () => {
       Plate.insertMany(plates)
     ])
       .then(results => {
-        console.log('results from testing',results);
+        // console.log('results from testing',results);
         const userResults = results[0];
         user = userResults[0];
         token =  jwt.sign( { user }, JWT_SECRET, {
@@ -203,11 +203,11 @@ describe('RoadRate API - Plates', () => {
       let res;
       return chai.request(app)
         .post('/api/plates')
-        .set('Authorization', `Bearer ${token}`)
+        // .set('Authorization', `Bearer ${token}`)
         .send(newItem)
         .then((_res) => {
 
-          console.log('testing res.body: ', _res.body);
+          console.log('testing POST res.body: ', _res.body);
       
           res = _res;
           expect(res).to.have.status(201);
@@ -227,8 +227,41 @@ describe('RoadRate API - Plates', () => {
         });
     });
 
+    it('should return an error when missing "plateNumber" or "plateState" field', () => {
+      const newItem = {};
+      return chai.request(app)
+        .post('/api/plates')
+        // .set('Authorization', `Bearer ${token}`)
+        .send(newItem)
+        .then(res => {
+          // console.log('TESTING POST res.body: ', res.error);
+          expect(res).to.have.status(400);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Missing `plateNumber` or `plateState` in request body');
+        });
+    }); //end of it()
 
-  });
+    // it('should return an error when "plateNumber" is empty string', () => {
+    //   const newItem = { 
+    //     plateNumber: '',
+    //     plateState: 'MA' 
+    //   };
+
+    //   return chai.request(app)
+    //     .post('/api/post')
+    //     .set('Authorization', `Bearer ${token}`)
+    //     .send(newItem)
+    //     .then(res => {
+    // console.log('res on testing',res.error);
+    // expect(res).to.have.status(400);
+    // expect(res).to.be.json;
+    // expect(res.body).to.be.a('object');
+    // expect(res.body.message).to.equal('Missing `plateNumber` or `plateState` in request body');
+    //     });
+    // }); //end of it()
+
+  }); // end POST plate route
 
 
 });//end of ROADRATE PLATES

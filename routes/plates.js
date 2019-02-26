@@ -96,15 +96,25 @@ router.post('/', jsonParser, (req, res, next) => {
   console.log('plate POST req.body ', req.body);
 
   /***** Never trust users - validate input *****/
-  if (!plateNumber || !plateState) {
-    const err = new Error('Missing `plateNumber` or `plateState` in request body');
-    err.status = 400;
+  // if (!plateNumber || plateNumber === '' || !plateState ||plateState === '') {
+  //   const err = new Error('Missing `plateNumber` or `plateState` in request body');
+  //   err.status = 400;
+  //   return next(err);
+  // }
+
+  if(!plateNumber || plateNumber === '' ) {
+    const err = {
+      message: 'Missing `plateNumber` or `plateState` in request body',
+      reason: 'MissingContent',
+      status: 400,
+      location: 'POST'
+    };
     return next(err);
   }
 
   Plate.create({plateNumber, plateState, userId})
     .then(data => {
-      console.log('is the newplate creating?', data);
+      // console.log('is the newplate creating?', data);
       // return res.json(data);
       return res.location(`${req.originalUrl}/${data.id}`).status(201).json(data);
     })

@@ -9,12 +9,19 @@ const { TEST_DATABASE_URL } = require('../config');
 const { dbConnect, dbDisconnect } = require('../db-mongoose');
 
 const Review = require('../models/review');
+const User = require('../models/user');
+
+const { reviews, users } = require('../db/data');
+
+process.env.NODE_ENV = 'test';
+
+process.stdout.write('\x1Bc\n');
 
 const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('RoadRate - Users', function () {
+describe('RoadRate - Reviews', function () {
   //Test User Info
   const userData = {
     'name': 'RP Boyle',
@@ -23,7 +30,7 @@ describe('RoadRate - Users', function () {
     'username': 'testUser',
     'password': 'Password123',
     'confirmPassword': 'Password123'
-  }
+  };
   let token = null;
   let userId = null;
 
@@ -33,7 +40,6 @@ describe('RoadRate - Users', function () {
   const rating = true;
   const message = 'This guys an ass hat!';
   let reviewerId = null;
-
 
   before(function () {
     return dbConnect(TEST_DATABASE_URL)
@@ -52,9 +58,12 @@ describe('RoadRate - Users', function () {
           .then(data => {
             token = data.body.authToken;
             reviewerId = data.body.id;
-            return User.createIndexes();
-          })
-      })
+            return Promise.all([
+              User.createIndexes(),
+              Review.insertMany(reviews)
+            ]);
+          });
+      });
   });
   afterEach(function () {
     return User.deleteMany();
@@ -70,24 +79,36 @@ describe('RoadRate - Users', function () {
       return chai
         .request(app)
         .post('/api/reviews')
-        .send({ plateNumber, rating, message, username, reviewerId, plateState })
+        .send({ plateNumber, rating, message, 'username': 'testUser', reviewerId, plateState })
         .then(_res => {
           res = _res;
           expect(res).to.have.status(201);
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.keys('id', 'username', 'name');
-          expect(res.body.id).to.exist;
-          expect(res.body.username).to.equal(username);
-          return User.findOne({ username: 'exampleUser'}); 
-        })
-        .then(user => {
-          expect(user).to.exist;
-          expect(user.id).to.equal(res.body.id);
-          return user.validatePassword(password);
-        })
-        .then(isValid => {
-          expect(isValid).to.be.true;
+          expect(res.body).to.have.keys('plateId', 'plateNumber', 'isPositive', 'message', 'plateState', '_id', 'id', 'createdAt', 'updatedAt');
+          expect(res.body._id).to.exist;
+          return Review.findOne({ _id: res.body._id});})
+        .then(review => {
+          expect(review).to.exist;
+          expect(review.plateNumber).to.equal(res.body.plateNumber);
         });
     });
-
   });
+
+  describe('GET /api/reviews', function () {
+    return chai
+      .request(app)
+      .get('/api/reviews')
+      .then(res => {
+        console.log(res);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.have.length(res.body.length);
+      });
+  });  
+
+  // describe('PUT /api/reviews', function () {
+
+  // });
+
+});

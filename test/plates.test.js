@@ -158,10 +158,15 @@ describe('RoadRate API - Plates', () => {
             .get(`/api/plates/all/${userId}`);
         })
         .then((res) => { //note karma is optional a plate can be claimed without a karma score
+
+          const [ body ] = res.body;
+
+          console.log('testing res.body: ', body);
+          console.log('testing data', data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('array');
-          // expect(res.body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState');  // this is throwing an error 
+          expect(body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState');  // this is throwing an error 
           expect(res.body.id).to.equal(data.id);
           expect(res.body.carType).to.equal(data.carType);
           expect(res.body.plateNumber).to.equal(data.plateNumber);

@@ -14,11 +14,7 @@ router.get('/', (req, res, next) => {
 
   if (search && state) {
     const re = new RegExp(search, 'i');
-    // filter.$and = [
-    //   { $or: [{'plateNumber': search.toUpperCase() }, {'plateState': state}] }
-    // ];
     filter = {
-      /*  plateNumber: search.toUpperCase(),  */
       plateNumber: re, 
       plateState: state
     };

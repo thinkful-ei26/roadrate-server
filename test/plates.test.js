@@ -71,6 +71,7 @@ describe('RoadRate API - Plates', () => {
 
   describe('GET /api/plates', () => {
 
+    //http://localhost:8080/api/plates/
     it('should return the correct number of Plates', () => {
       return Promise.all([
         Plate.find(),
@@ -116,12 +117,60 @@ describe('RoadRate API - Plates', () => {
             expect(item.karma).to.equal(data[i].karma);
           });
         });
+    }); // end of it()
+
+    //http://localhost:8080/api/plates/?search=NOT-A-VALID-QUERY&state=CO
+    it('should return an empty array for an incorrect query', () => {
+      const search = 'NOT-A-VALID-QUERY';
+      const state = 'NOT-A-VALID-QUERY';
+
+      const re = new RegExp(search, 'i');
+      const dbPromise = Plate
+        .find({
+          plateNumber: re,
+          plateState: state
+        });
+
+      const apiPromise = chai.request(app)
+        .get(`/api/plates/?search=${search}&state=${state}`);
+    
+      return Promise.all([dbPromise, apiPromise])
+        .then(([data, res]) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(data.length);
+        });
+    }); // end of it()
+
+  
+  }); // end of GET /api/plates
+
+  describe('GET /api/plates/all/:id', () => {
+    it('should return correct plate using the userId', () => {
+      let data;
+      const userId = '5c7080ea36aad20017f75ef2';
+
+      return Plate.find({ userId })
+        .then(_data => {
+          data = _data;
+          return chai.request(app)
+            .get(`/api/plates/all/${userId}`);
+        })
+        .then((res) => { //note karma is optional a plate can be claimed without a karma score
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.an('array');
+          // expect(res.body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState');  // this is throwing an error 
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.carType).to.equal(data.carType);
+          expect(res.body.plateNumber).to.equal(data.plateNumber);
+          expect(res.body.plateState).to.equal(data.plateState);
+        });
     });
 
-  }); // end of GET /api/plates
-  
 
-
+  }); // end of GET /api/plates/:id
 
 });//end of ROADRATE PLATES
 

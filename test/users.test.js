@@ -23,6 +23,7 @@ describe('RoadRate - Users', function () {
   const confirmPassword = 'examplePass';
   const emptyUsername = '';
   const emptyPassword = '';
+  const ConfirmEmptyPassword = '';
   const undefinedUsername = undefined;
   const undefinedPassword  = undefined;
   const emptySpaceUsername = 'exampleUser   ';
@@ -76,7 +77,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({ name, emptyUsername, password, confirmPassword, email, confirmEmail })
+        .send({ name, username: emptyUsername, password, confirmPassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -87,7 +88,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({username, emptyPassword})
+        .send({ name, username, password: emptyPassword, confirmPassword: emptyPassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -98,7 +99,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({undefinedUsername, password})
+        .send({ name, username: undefinedUsername, password, confirmPassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -109,7 +110,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({username, undefinedPassword})
+        .send({ name, username, password: undefinedPassword, confirmPassword: undefinedPassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -120,7 +121,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({emptySpaceUsername, password})
+        .send({ name, username: emptySpaceUsername, password, confirmPassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -131,7 +132,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({username, emptySpacePassword})
+        .send({ name, username, password: emptySpacePassword, confirmPassword: emptySpacePassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -142,7 +143,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({nullUsername, password})
+        .send({ name, username: nullUsername, password, confirmPassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -153,7 +154,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({username, nullPassword})
+        .send({ name, username, password: nullPassword, confirmPassword: nullPassword, email, confirmEmail })
         .then(result => {
           res = result;
           expect(res).to.have.status(422);
@@ -164,7 +165,7 @@ describe('RoadRate - Users', function () {
       let res;
       return chai.request(app)
         .post('/api/users')
-        .send({username, bigasspass})
+        .send({ name, username, password: bigasspass, confirmPassword: bigasspass, email, confirmEmail })
         .then(result => {
           res = result;  
           expect(res).to.have.status(422);
@@ -172,14 +173,11 @@ describe('RoadRate - Users', function () {
     });
 
     it('Should reject users with duplicate username', function () {
-      return User.create({
-        username: 'msgreen',
-        password,
-      })
+      return User.create({ name, username: 'msgreen', password, confirmPassword, email, confirmEmail })
         .then(() => {
           return chai.request(app)
             .post('/api/users')
-            .send({username: 'msgreen', password})
+            .send({ name, username: 'msgreen', password, confirmPassword, email, confirmEmail })
             .then(result => {
               expect(result).to.have.status(422);
             });

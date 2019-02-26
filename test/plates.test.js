@@ -2,14 +2,15 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const mongoose = require('mongoose');
 
 //schemas
 const Plate = require('../models/plate');
 const User = require('../models/user');
 
 //Auth requirements
-// const jwt = require('jsonwebtoken');
-const { TEST_DATABASE_URL } = require('../config');
+const jwt = require('jsonwebtoken');
+const { TEST_DATABASE_URL, JWT_SECRET, JWT_EXPIRY } = require('../config');
 const { dbConnect, dbDisconnect } = require('../db-mongoose');
 
 const { app } = require('../index');
@@ -33,8 +34,8 @@ chai.use(chaiHttp);
 describe('RoadRate API - Plates', () => {
 
   //set token and user at high scope to be accessible for rest of test
-  // let token;
-  // let user;
+  let token;
+  let user;
   
   //test hooks: 
   //connect to db, blow away the existing db
@@ -53,6 +54,12 @@ describe('RoadRate API - Plates', () => {
     ])
       .then(results => {
         console.log('results from testing',results);
+        const userResults = results[0];
+        user = userResults[0];
+        token =  jwt.sign( { user }, JWT_SECRET, {
+          subject: user.username,
+          expiresIn: JWT_EXPIRY
+        });
       });
   });
 
@@ -196,7 +203,7 @@ describe('RoadRate API - Plates', () => {
       let res;
       return chai.request(app)
         .post('/api/plates')
-        // .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send(newItem)
         .then((_res) => {
 
@@ -207,7 +214,7 @@ describe('RoadRate API - Plates', () => {
           // expect(res).to.have.header('location');
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          // expect(res.body).to.have.all.keys('plateNumber', 'plateState', 'userId');
+          expect(res.body).to.have.all.keys('plateNumber', 'plateState', 'carType', 'id');
           return Plate.findById(res.body.id);
         })
         .then(data => {

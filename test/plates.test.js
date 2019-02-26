@@ -33,8 +33,8 @@ chai.use(chaiHttp);
 describe('RoadRate API - Plates', () => {
 
   //set token and user at high scope to be accessible for rest of test
-  let token;
-  let user;
+  // let token;
+  // let user;
   
   //test hooks: 
   //connect to db, blow away the existing db
@@ -70,6 +70,7 @@ describe('RoadRate API - Plates', () => {
 
 
   describe('GET /api/plates', () => {
+
     it('should return the correct number of Plates', () => {
       return Promise.all([
         Plate.find(),
@@ -84,7 +85,38 @@ describe('RoadRate API - Plates', () => {
         });
     }); /*end of it */
 
+    //http://localhost:8080/api/plates/?search=FIVE103&state=CO
+    it('should return correct search results for a plateNumber search', () => {
+      const search = 'SNOW';
+      const state = 'AK';
 
+      const re = new RegExp(search, 'i');
+      const dbPromise = Plate
+        .find({
+          plateNumber: re,
+          plateState: state
+        });
+
+      const apiPromise = chai.request(app)
+        .get(`/api/plates/?search=${search}&state=${state}`);
+      
+      return Promise.all([dbPromise, apiPromise])
+        .then(([data, res]) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(data.length);
+          res.body.forEach( (item, i) => {
+            expect(item).to.be.a('object');
+            expect(item).to.include.all.keys('carType', 'plateNumber', 'plateState', 'karma', 'id'); 
+            expect(item.id).to.equal(data[i].id);
+            expect(item.plateNumber).to.equal(data[i].plateNumber);
+            expect(item.plateState).to.equal(data[i].plateState);
+            expect(item.carType).to.equal(data[i].carType);
+            expect(item.karma).to.equal(data[i].karma);
+          });
+        });
+    });
 
   }); // end of GET /api/plates
   

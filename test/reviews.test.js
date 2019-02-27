@@ -5,13 +5,15 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require ('mongoose');
 
-const { TEST_DATABASE_URL } = require('../config');
+const jwt = require('jsonwebtoken');
+const { TEST_DATABASE_URL, JWT_SECRET, JWT_EXPIRY } = require('../config');
 const { dbConnect, dbDisconnect } = require('../db-mongoose');
 
 const Review = require('../models/review');
 const User = require('../models/user');
+const Plate = require('../models/plate');
 
-const { reviews, users } = require('../db/data');
+const { reviews, users, plates } = require('../db/data');
 
 process.env.NODE_ENV = 'test';
 
@@ -22,17 +24,8 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('RoadRate - Reviews', function () {
-  //Test User Info
-  const userData = {
-    'name': 'RP Boyle',
-    'email': 'rpboyle11@yahoo.com',
-    'confirmEmail': 'rpboyle11@yahoo.com',
-    'username': 'testUser',
-    'password': 'Password123',
-    'confirmPassword': 'Password123'
-  };
-  let token = null;
-  let userId = null;
+  let token;
+  let user;
 
   //Test Review Info
   const plateNumber = 'TEST-1234';
@@ -46,25 +39,23 @@ describe('RoadRate - Reviews', function () {
       .then(() => User.deleteMany());
   });
   beforeEach(function () {
-    return chai
-      .request(app)
-      .post('/api/users')
-      .send(userData)
-      .then(() => {
-        return chai
-          .request(app)
-          .post('/api/auth/login')
-          .send({ 'username': 'testUser', 'password': 'Password123' })
-          .then(data => {
-            token = data.body.authToken;
-            reviewerId = data.body.id;
-            return Promise.all([
-              User.createIndexes(),
-              Review.insertMany(reviews)
-            ]);
-          });
+    return Promise.all([
+      User.insertMany(users),
+      User.createIndexes(),
+      Plate.insertMany(plates),
+      Review.insertMany(reviews)
+    ])
+      .then(results => {
+      console.log('results from testing',results);
+        const userResults = results[0];
+        user = userResults[0];
+        token =  jwt.sign( { user }, JWT_SECRET, {
+          subject: user.username,
+          expiresIn: JWT_EXPIRY
+        });
       });
   });
+
   afterEach(function () {
     return User.deleteMany();
   });
@@ -75,6 +66,7 @@ describe('RoadRate - Reviews', function () {
   describe('POST /api/reviews', function () {
   
     it('Should create a new review', function () {
+      this.timeout(5000);
       let res;
       return chai
         .request(app)
@@ -95,16 +87,40 @@ describe('RoadRate - Reviews', function () {
   });
 
   describe('GET /api/reviews', function () {
-    return chai
-      .request(app)
-      .get('/api/reviews')
-      .then(res => {
-        console.log(res);
-        expect(res).to.have.status(200);
-        expect(res).to.be.json;
-        expect(res.body).to.be.a('array');
-        expect(res.body).to.have.length(res.body.length);
-      });
+    
+    it('Should get all reviews', function () {
+      return chai
+        .request(app)
+        .get('/api/reviews')
+        .then(res => {
+          console.log(res);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(res.body.length);
+        });
+    });
+
+    it('Should get all reviews left by the current user', function () {
+      return chai
+        .request(app)
+        .get(`/api/reviews/${user.id}`)
+        .then(res => {
+          console.log(res);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(res.body.length);
+        });
+    });
+
+    it('Should get all reviews about a specific plate', function () {
+      plateId = 
+      return chai
+        .request(app)
+        .get(`/api/reviews/my-plates/${plateId}`)
+    });
+
   });  
 
   // describe('PUT /api/reviews', function () {

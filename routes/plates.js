@@ -95,13 +95,6 @@ router.post('/', jsonParser, (req, res, next) => {
   let {plateNumber, userId, plateState } = req.body;
   console.log('plate POST req.body ', req.body);
 
-  /***** Never trust users - validate input *****/
-  // if (!plateNumber || plateNumber === '' || !plateState ||plateState === '') {
-  //   const err = new Error('Missing `plateNumber` or `plateState` in request body');
-  //   err.status = 400;
-  //   return next(err);
-  // }
-
   if(!plateNumber || plateNumber === '' ) {
     const err = {
       message: 'Missing `plateNumber` or `plateState` in request body',

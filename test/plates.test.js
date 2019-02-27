@@ -250,8 +250,8 @@ describe('RoadRate API - Plates', () => {
         .then((res) => { 
 
           const body = res.body;
-          console.log('FETCH KARMA VIA STATE & PLATE: ', res.body);
-          console.log('FETCH KARMA VIA STATE & PLATES', data);
+          // console.log('FETCH KARMA VIA STATE & PLATE: ', res.body);
+          // console.log('FETCH KARMA VIA STATE & PLATES', data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(body).to.be.an('array');

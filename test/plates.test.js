@@ -41,7 +41,11 @@ describe('RoadRate API - Plates', () => {
   //connect to db, blow away the existing db
   before(() => {
     return dbConnect(TEST_DATABASE_URL)
-      .then(() => Plate.deleteMany());
+      .then(() => {
+        Plate.deleteMany();
+        User.deleteMany();
+      }
+      );
   });
 
   //insert some notes before test & create the indexes too

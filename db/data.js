@@ -34,7 +34,6 @@ const plates = [
     _id: '5c73d17085f19002f8d58763',
     plateNumber: 'SNOWY', 
     carType: 'Truck', 
-    userId: '5c712afa1ee8106edae019d5',
     plateState: 'AK', 
     karma: 2
   },

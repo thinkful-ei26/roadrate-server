@@ -150,7 +150,7 @@ router.put('/:userId', (req, res, next) => {
     // .then(() => res.sendStatus(204))
     .then((data) => {
       console.log(data);
-      res.status(204).json(data);
+      res.json(data);
     })
     .catch(err => next(err));
 });
@@ -180,7 +180,7 @@ router.put('/unclaim/:userId', (req, res, next) => {
     })
     .then((data) => {
       console.log(data);
-      res.status(204).json(data);
+      res.json(data);
     })
     .catch(err => next(err));
 });

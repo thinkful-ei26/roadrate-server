@@ -35,33 +35,40 @@ describe('RoadRate - Reviews', function () {
   let reviewerId = null;
 
   before(function () {
-    return dbConnect(TEST_DATABASE_URL)
-      .then(() => {
-        User.deleteMany(),
-        Plate.deleteMany(),
-        Review.deleteMany(); 
-      });
+    return dbConnect(TEST_DATABASE_URL);
   });
+
   beforeEach(function () {
     return Promise.all([
-      User.insertMany(users),
-      User.createIndexes(),
-      Plate.insertMany(plates),
-      Review.insertMany(reviews)
+      User.deleteMany(),
+      Plate.deleteMany(),
+      Review.deleteMany(), 
     ])
-      .then(results => {
-        console.log('results from testing',results);
-        const userResults = results[0];
-        user = userResults[0];
-        token =  jwt.sign( { user }, JWT_SECRET, {
-          subject: user.username,
-          expiresIn: JWT_EXPIRY
-        });
+      .then(() => {
+        return Promise.all([
+          User.insertMany(users),
+          User.createIndexes(),
+          Plate.insertMany(plates),
+          Review.insertMany(reviews)
+        ])
+          .then(results => {
+            console.log('results from testing',results);
+            const userResults = results[0];
+            user = userResults[0];
+            token =  jwt.sign( { user }, JWT_SECRET, {
+              subject: user.username,
+              expiresIn: JWT_EXPIRY
+            });
+          });
       });
   });
 
   afterEach(function () {
-    return User.deleteMany();
+    return (() => {
+      User.deleteMany();
+      Plate.deleteMany();
+      Review.deleteMany();
+    });
   });
   after(function () {
     return dbDisconnect();

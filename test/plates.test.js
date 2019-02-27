@@ -40,26 +40,31 @@ describe('RoadRate API - Plates', () => {
   //test hooks: 
   //connect to db, blow away the existing db
   before(() => {
-    return dbConnect(TEST_DATABASE_URL)
-      .then(() => Plate.deleteMany());
+    return dbConnect(TEST_DATABASE_URL);
   });
 
   //insert some notes before test & create the indexes too
 
   beforeEach( () => {
     return Promise.all([
-      User.insertMany(users),
-      User.createIndexes(),
-      Plate.insertMany(plates)
+      Plate.deleteMany(),
+      User.deleteMany()
     ])
-      .then(results => {
-        // console.log('results from testing',results);
-        const userResults = results[0];
-        user = userResults[0];
-        token =  jwt.sign( { user }, JWT_SECRET, {
-          subject: user.username,
-          expiresIn: JWT_EXPIRY
-        });
+      .then(() => {
+        return Promise.all([
+          User.insertMany(users),
+          User.createIndexes(),
+          Plate.insertMany(plates)
+        ])
+          .then(results => {
+          // console.log('results from testing',results);
+            const userResults = results[0];
+            user = userResults[0];
+            token =  jwt.sign( { user }, JWT_SECRET, {
+              subject: user.username,
+              expiresIn: JWT_EXPIRY
+            });
+          });
       });
   });
 
@@ -76,7 +81,7 @@ describe('RoadRate API - Plates', () => {
   });
 
 
-  describe.skip('GET /api/plates', () => {
+  describe('GET /api/plates', () => {
 
     //http://localhost:8080/api/plates/
     it('should return the correct number of Plates', () => {
@@ -153,7 +158,7 @@ describe('RoadRate API - Plates', () => {
   
   }); // end of GET /api/plates
 
-  describe.skip('GET /api/plates/all/:id', () => {
+  describe('GET /api/plates/all/:id', () => {
     it('should return correct plate using the userId', () => {
       let data;
       const userId = '5c7080ea36aad20017f75ef2';
@@ -194,7 +199,7 @@ describe('RoadRate API - Plates', () => {
 
   describe('POST /api/plates', () => {
 
-    it.skip('should create and return a new plate when provided valid plateNumber, plateState, and userId', () => {
+    it('should create and return a new plate when provided valid plateNumber, plateState, and userId', () => {
       const newItem = {
         plateNumber: '123YOLO',
         plateState: 'MA',

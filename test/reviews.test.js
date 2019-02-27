@@ -36,7 +36,11 @@ describe('RoadRate - Reviews', function () {
 
   before(function () {
     return dbConnect(TEST_DATABASE_URL)
-      .then(() => User.deleteMany());
+      .then(() => {
+        User.deleteMany(),
+        Plate.deleteMany(),
+        Review.deleteMany(); 
+      });
   });
   beforeEach(function () {
     return Promise.all([
@@ -46,7 +50,7 @@ describe('RoadRate - Reviews', function () {
       Review.insertMany(reviews)
     ])
       .then(results => {
-      console.log('results from testing',results);
+        console.log('results from testing',results);
         const userResults = results[0];
         user = userResults[0];
         token =  jwt.sign( { user }, JWT_SECRET, {
@@ -71,7 +75,7 @@ describe('RoadRate - Reviews', function () {
       return chai
         .request(app)
         .post('/api/reviews')
-        .send({ plateNumber, rating, message, 'username': 'testUser', reviewerId, plateState })
+        .send({ plateNumber, rating, message, 'username': user.username, reviewerId, plateState })
         .then(_res => {
           res = _res;
           expect(res).to.have.status(201);
@@ -114,12 +118,12 @@ describe('RoadRate - Reviews', function () {
         });
     });
 
-    it('Should get all reviews about a specific plate', function () {
-      plateId = 
-      return chai
-        .request(app)
-        .get(`/api/reviews/my-plates/${plateId}`)
-    });
+    // it('Should get all reviews about a specific plate', function () {
+    //   plateId = 
+    //   return chai
+    //     .request(app)
+    //     .get(`/api/reviews/my-plates/${plateId}`)
+    // });
 
   });  
 

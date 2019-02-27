@@ -159,7 +159,7 @@ describe('RoadRate API - Plates', () => {
   }); // end of GET /api/plates
 
   describe('GET /api/plates/all/:id', () => {
-    it('should return correct plate using the userId', () => {
+    it.skip('should return correct plate using the userId', () => {
       let data;
       const userId = '5c7080ea36aad20017f75ef2';
 

@@ -76,7 +76,7 @@ describe('RoadRate API - Plates', () => {
   });
 
 
-  describe.skip('GET /api/plates', () => {
+  describe('GET /api/plates', () => {
 
     //http://localhost:8080/api/plates/
     it('should return the correct number of Plates', () => {
@@ -153,7 +153,7 @@ describe('RoadRate API - Plates', () => {
   
   }); // end of GET /api/plates
 
-  describe.skip('GET /api/plates/all/:id', () => {
+  describe('GET /api/plates/all/:id', () => {
     it('should return correct plate using the userId', () => {
       let data;
       const userId = '5c7080ea36aad20017f75ef2';
@@ -190,11 +190,88 @@ describe('RoadRate API - Plates', () => {
         });
     }); //end of it()
 
+  }); // end of GET /api/plates/all/:userId
+
+  describe('GET /api/plates/:id', () => {
+    it('should return correct plate using the plateId', () => {
+      let data;
+      const _id = '5c712b681ee8106edae019d6';
+
+      return Plate.findById({ _id })
+        .then(_data => {
+          data = _data;
+          return chai.request(app)
+            .get(`/api/plates/${_id}`);
+        })
+        .then((res) => { 
+
+          // console.log('testing res.body: ', res.body);
+          // console.log('testing data', data);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState');  // this is throwing an error 
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.carType).to.equal(data.carType);
+          expect(res.body.plateNumber).to.equal(data.plateNumber);
+          expect(res.body.plateState).to.equal(data.plateState);
+        });
+    }); //end of it()
+ 
+    it('should respond with status 400 and an error message when `id` is not valid', () => {
+      return chai.request(app)
+        .get('/api/plates/all/NOT-A-VALID-ID')
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Missing `userId` to fetch plates');
+        });
+    }); //end of it()
+
+  }); // end of GET /api/plates/:id
+
+  describe('GET /api/plates/:id', () => {
+    it('should return correct plate using the plateState and plateNumber', () => {
+      let plateState = 'AK';
+      let plateNumber = 'SNOW';
+      let filter = {};
+      let data;
+
+      filter = {
+        plateState,
+        plateNumber
+      };
+
+      return Plate.find(filter)
+        .then(_data => {
+          data = _data;
+          return chai.request(app)
+            .get(`/api/plates/${plateState}/${plateNumber}`);
+        })
+        .then((res) => { 
+
+          const body = res.body;
+          console.log('FETCH KARMA VIA STATE & PLATE: ', res.body);
+          console.log('FETCH KARMA VIA STATE & PLATES', data);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(body).to.be.an('array');
+        });
+    }); //end of it()
+ 
+    it('should respond with status 400 and an error message when `id` is not valid', () => {
+      return chai.request(app)
+        .get('/api/plates/all/NOT-A-VALID-ID')
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Missing `userId` to fetch plates');
+        });
+    }); //end of it()
+
   }); // end of GET /api/plates/:id
 
   describe('POST /api/plates', () => {
 
-    it.skip('should create and return a new plate when provided valid plateNumber, plateState, and userId', () => {
+    it('should create and return a new plate when provided valid plateNumber, plateState, and userId', () => {
       const newItem = {
         plateNumber: '123YOLO',
         plateState: 'MA',
@@ -242,27 +319,78 @@ describe('RoadRate API - Plates', () => {
         });
     }); //end of it()
 
-    // it('should return an error when "plateNumber" is empty string', () => {
-    //   const newItem = { 
-    //     plateNumber: '',
-    //     plateState: 'MA' 
-    //   };
-
-    //   return chai.request(app)
-    //     .post('/api/post')
-    //     .set('Authorization', `Bearer ${token}`)
-    //     .send(newItem)
-    //     .then(res => {
-    // console.log('res on testing',res.error);
-    // expect(res).to.have.status(400);
-    // expect(res).to.be.json;
-    // expect(res.body).to.be.a('object');
-    // expect(res.body.message).to.equal('Missing `plateNumber` or `plateState` in request body');
-    //     });
-    // }); //end of it()
-
   }); // end POST plate route
 
+
+  describe('PUT /api/plates/:userId', () => {
+
+    it('claim a license plate by appending a userId to the plate document if given the plateNumber, plateState, and a userId', () => {
+      const userId = '5c712afa1ee8106edae019d5';
+      const plateNumber = 'SNOWY';
+      const plateState = 'AK';
+      
+      const updateItem = {
+        plateNumber, plateState, userId
+      };
+      let data;
+
+      return  Plate.findOneAndUpdate({ plateNumber, plateState } , { userId: userId })
+        .then(_data => {
+          data = _data;
+          return chai.request(app)
+            .put(`/api/plates/${userId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updateItem);
+        })
+        .then( res => {
+          // console.log('RES >>>>',res.body);
+          // console.log('DATA >>>',data);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.include.keys('id', 'plateNumber', 'plateState', 'karma');
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.title).to.equal(updateItem.title);
+          expect(res.body.content).to.equal(data.content);
+          expect(res.body.folderId).to.equal(data.folderId);
+        });
+    }); //end of it()
+
+  });// end PUT plates/:userId route
+
+  describe('PUT /api/plates/unclaim/:userId', () => {
+    it('unclaim plate unsets userId from plate document', () => {
+      const userId = '5c712afa1ee8106edae019d5';
+      const plateNumber = 'SNOWY';
+      const plateState = 'AK';
+      
+      const updateItem = {
+        plateNumber, plateState, userId
+      };
+      let data;
+
+      return  Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { $unset: { userId: userId }})
+        .then(_data => {
+          data = _data;
+          return chai.request(app)
+            .put(`/api/plates/unclaim/${userId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updateItem);
+        })
+        .then( res => {
+          // console.log('RES >>>>',res.body);
+          // console.log('DATA >>>',data);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.include.keys('id', 'plateNumber', 'plateState', 'karma');
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.title).to.equal(updateItem.title);
+          expect(res.body.content).to.equal(data.content);
+          expect(res.body.folderId).to.equal(data.folderId);
+        });
+    }); //end of it()
+  });// end PUT plates/unclaim/:userId route
 
 });//end of ROADRATE PLATES
 

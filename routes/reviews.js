@@ -20,6 +20,7 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   const { number } = req.query;
   const { state } = req.query;
+  // BELOW are used for Infinite Scroll feature
   // const start = req.query.start;
   // const count = req.query.count;
 
@@ -47,9 +48,10 @@ router.get('/', (req, res, next) => {
   console.log('filtering for:', filter);
 
   Review.find(filter)
-    .sort({'updatedAt': -1})
+    .sort({'createdAt': -1})
     .exec()
     .then(docs => {
+      // BELOW is used for Infinite Scroll
       // docs = docs.slice(start, start+count);
       res.status(200).json(docs);
     })

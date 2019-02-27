@@ -14,12 +14,10 @@ const users = [
     _id: '5c712afa1ee8106edae019d5',
     name: 'John Snow',
     username: 'john',
-    // hash for "password123"
     password: '$2a$10$RO.gat3xGh28m.tmSHX9JOVUKJjpbb6t1gdRNhdDPBXxewlcypW7O',
     email: 'thenightswatch123@gmail.com',
     createdAt: '2019-02-23T11:14:02.127+00:00',
     updatedAt: '2019-02-23T11:14:02.127+00:00'
-    
   }
 ];
 
@@ -48,10 +46,17 @@ const plates = [
     plateState: 'WY', 
     karma: -1
   },
+  {
+    _id: '5c7082ce36aad20017f75ef8',
+    plateNumber: 'HBPRINCE', 
+    carType: 'Truck', 
+    userId: '000000000000000000000002',
+    plateState: 'WY', 
+    karma: -1
+  }
 ];
 
 const reviews = [
-  {
     _id:'5c7082ce36aad20017f75ef9',
     plateNumber:'HBPRINCE',
     reviewerId: '5c712afa1ee8106edae019d5',

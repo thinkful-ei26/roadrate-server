@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-// const passport = require('passport');
 const User = require('../models/user');
 const Review = require('../models/review');
 const Plate = require('../models/plate');
@@ -10,24 +9,11 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const router = express.Router();
 
-// const jwtAuth = passport.authenticate('jwt', {
-//   session: false,
-//   failWithError: true
-// });
-// router.use(jwtAuth);
-
 /* ========== GET ALL REVIEWS ========== */
 router.get('/', (req, res, next) => {
   const { number } = req.query;
   const { state } = req.query;
-  // BELOW are used for Infinite Scroll feature
-  // const start = req.query.start;
-  // const count = req.query.count;
-
   let filter = {};
-
-  console.log('REQ.QUERY HERE',req.query);
-
   const re = new RegExp(number, 'i');
 
   if (number && !state) {
@@ -44,15 +30,11 @@ router.get('/', (req, res, next) => {
       plateNumber: re,
     };
   }
-  
-  console.log('filtering for:', filter);
 
   Review.find(filter)
     .sort({'createdAt': -1})
     .exec()
     .then(docs => {
-      // BELOW is used for Infinite Scroll
-      // docs = docs.slice(start, start+count);
       res.status(200).json(docs);
     })
     .catch(err => {
@@ -65,7 +47,7 @@ router.get('/', (req, res, next) => {
 router.get('/my-plates/:plateId', (req, res, next) => {
   let plateId = req.params.plateId;
 
-  Review.find({plateId})
+  Review.find({ plateId })
     .then(data => res.json(data))
     .catch(err => next(err));
 });
@@ -74,7 +56,7 @@ router.get('/my-plates/:plateId', (req, res, next) => {
 router.get('/plate/:plateId', (req, res, next) => {
   let plateId = req.params.plateId;
  
-  Review.find({plateId})
+  Review.find({ plateId })
     .then(data => res.json(data))
     .catch(err => next(err));
 });
@@ -95,34 +77,14 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// /* ========== GET FILTERED REVIEWS LEFT BY SPECIFIC USER ========== */
-// router.get('/:user', (req, res, next) => {
-
-//   let username = req.params.user;
-//   console.log(username);
-
-//   User.find({username: username})
-//     .then(user => {
-//       const userId = user[0]._id;   
-//       return Review.find({reviewerId: userId})
-//         .then(reviews => res.json(reviews))
-//         .catch(err => next(err));
-//     })
-//     .catch( err => next(err));
-
-// });
-
 /* ========== GET FILTERED REVIEWS LEFT BY SPECIFIC USER ========== */
 // this is the same code above but uses the userId to fetch reviews & filter 
 router.get('/:userId', (req, res, next) => {
 
   let userId = req.params.userId;
-  console.log(userId);
 
   User.find({id: userId})
-    .then(user => {
-      console.log('user: ',user);
-      // const userId = user[0]._id;   
+    .then(() => {  
       return Review.find({reviewerId: userId})
         .then(reviews => res.json(reviews))
         .catch(err => next(err));

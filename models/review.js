@@ -17,18 +17,15 @@ const ReviewSchema = new mongoose.Schema({
   },
   isPositive: {
     type: String, 
-    // required: true
   }, 
   message: {
     type: String,
-    // required: true
   },
   ownerResponse: {
     type: String,
   },
   plateState: {
     type: String,
-    // required: true
   }
 });
 

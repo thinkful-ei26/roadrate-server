@@ -118,7 +118,6 @@ describe('RoadRate API - Plates', () => {
         });
     }); // end of it()
 
-    //http://localhost:8080/api/plates/?search=NOT-A-VALID-QUERY&state=CO
     it('should return an empty array for an incorrect query', () => {
       const search = 'NOT-A-VALID-QUERY';
       const state = 'NOT-A-VALID-QUERY';
@@ -185,9 +184,6 @@ describe('RoadRate API - Plates', () => {
             .get(`/api/plates/${_id}`);
         })
         .then((res) => { 
-
-          // console.log('testing res.body: ', res.body);
-          // console.log('testing data', data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('object');

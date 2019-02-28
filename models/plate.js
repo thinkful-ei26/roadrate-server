@@ -2,11 +2,6 @@
 
 const mongoose = require('mongoose');
 
-// car type validation for user claiming a plate
-// let users register same plate numbers on different states
-//plate.state === plate.number && plate.number === plate.state
-
-
 const PlateSchema = new mongoose.Schema({
   plateNumber: { 
     type : String, 
@@ -40,9 +35,9 @@ PlateSchema.on('index', function(error) {
   console.log('error 49', error.message);
 });
 
-const Plate = mongoose.model('Plate', PlateSchema)
+const Plate = mongoose.model('Plate', PlateSchema);
+
 Plate.createIndexes({plateNumber : 1, plateState : 1 },  function(err, result) {
-  console.log('result', result);
   return (result);
 });
 
@@ -56,7 +51,6 @@ PlateSchema.set('toJSON', {
     delete result._id; //This is the reviewId
     delete result.__v;
     delete result.userId;
-    
   },
 });
 

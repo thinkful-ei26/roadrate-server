@@ -165,7 +165,7 @@ describe('RoadRate API - Plates', () => {
   describe('GET /api/plates/:id', () => {
     it('should return correct plate using the plateId', () => {
       let data;
-      const _id = '5c712b681ee8106edae019d6';
+      const _id = user.id;
 
       return Plate.findById({ _id })
         .then(_data => {

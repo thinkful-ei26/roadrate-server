@@ -10,7 +10,6 @@ const options = {session: false, failWithError: true};
 const localAuth = passport.authenticate('local', options);
 
 const createAuthToken = (user) => {
-  console.log('user on createAuth', user);
   return jwt.sign({ user }, JWT_SECRET, {
     subject: user.username,
     expiresIn: JWT_EXPIRY
@@ -19,7 +18,6 @@ const createAuthToken = (user) => {
 
 // Login
 router.post('/login', localAuth, (req, res) => {
-  console.log('login req:', req);
   const authToken = createAuthToken(req.user);
   res.json({ authToken });
 });

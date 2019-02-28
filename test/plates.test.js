@@ -12,23 +12,13 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { TEST_DATABASE_URL, JWT_SECRET, JWT_EXPIRY } = require('../config');
 const { dbConnect, dbDisconnect } = require('../db-mongoose');
-
 const { app } = require('../index');
-
-//db
 const { plates, users } = require('../db/data');
 
-// Set NODE_ENV to `test` to disable http layer logs
-// You can do this in the command line, but this is cross-platform
 process.env.NODE_ENV = 'test';
-
-// Clear the console before each run
 process.stdout.write('\x1Bc\n');
 
-//declare chai.expect as variable to use it for tests
 const expect = chai.expect;
-
-//mount chai http so you can use it
 chai.use(chaiHttp); 
 
 describe('RoadRate API - Plates', () => {
@@ -118,7 +108,6 @@ describe('RoadRate API - Plates', () => {
         });
     }); // end of it()
 
-    //http://localhost:8080/api/plates/?search=NOT-A-VALID-QUERY&state=CO
     it('should return an empty array for an incorrect query', () => {
       const search = 'NOT-A-VALID-QUERY';
       const state = 'NOT-A-VALID-QUERY';
@@ -176,7 +165,7 @@ describe('RoadRate API - Plates', () => {
   describe('GET /api/plates/:id', () => {
     it('should return correct plate using the plateId', () => {
       let data;
-      const _id = '5c712b681ee8106edae019d6';
+      const _id = user.id;
 
       return Plate.findById({ _id })
         .then(_data => {
@@ -185,9 +174,6 @@ describe('RoadRate API - Plates', () => {
             .get(`/api/plates/${_id}`);
         })
         .then((res) => { 
-
-          // console.log('testing res.body: ', res.body);
-          // console.log('testing data', data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('object');
@@ -228,10 +214,7 @@ describe('RoadRate API - Plates', () => {
             .get(`/api/plates/${plateState}/${plateNumber}`);
         })
         .then((res) => { 
-
           const body = res.body;
-          // console.log('FETCH KARMA VIA STATE & PLATE: ', res.body);
-          // console.log('FETCH KARMA VIA STATE & PLATES', data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(body).to.be.an('array');
@@ -285,7 +268,6 @@ describe('RoadRate API - Plates', () => {
         .set('Authorization', `Bearer ${token}`)
         .send(newItem)
         .then(res => {
-          // console.log('TESTING POST res.body: ', res.error);
           expect(res).to.have.status(400);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
@@ -315,8 +297,6 @@ describe('RoadRate API - Plates', () => {
             .send(updateItem);
         })
         .then( res => {
-          // console.log('RES >>>>',res.body);
-          // console.log('DATA >>>',data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
@@ -327,7 +307,6 @@ describe('RoadRate API - Plates', () => {
           expect(res.body.folderId).to.equal(data.folderId);
         });
     }); //end of it()
-
   });// end PUT plates/:userId route
 
   describe('PUT /api/plates/unclaim/:userId', () => {
@@ -335,7 +314,6 @@ describe('RoadRate API - Plates', () => {
       const userId = '5c712afa1ee8106edae019d5';
       const plateNumber = 'SNOWY';
       const plateState = 'AK';
-      
       const updateItem = {
         plateNumber, plateState, userId
       };
@@ -350,8 +328,6 @@ describe('RoadRate API - Plates', () => {
             .send(updateItem);
         })
         .then( res => {
-          // console.log('RES >>>>',res.body);
-          // console.log('DATA >>>',data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');

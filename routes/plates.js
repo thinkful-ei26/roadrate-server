@@ -24,11 +24,9 @@ router.get('/', (req, res, next) => {
   Plate.find(filter)
     .exec()
     .then(docs => {
-      console.log(docs);
       return res.status(200).json(docs);
     })
     .catch(err => {
-      console.log('error on get all plates: ', err);
       next(err);
     });
 });
@@ -83,7 +81,6 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
     plateState,
     plateNumber
   };
-  console.log('==== REQ.PARAMS PLATESTATE/PLATENUM ===',req.params);
 
   Plate.find(filter)
     .then(data => res.json(data))
@@ -93,14 +90,6 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
 /* ========== POST A PLATE ========== */
 router.post('/', jsonParser, (req, res, next) => {
   let {plateNumber, userId, plateState } = req.body;
-  console.log('plate POST req.body ', req.body);
-
-  /***** Never trust users - validate input *****/
-  // if (!plateNumber || plateNumber === '' || !plateState ||plateState === '') {
-  //   const err = new Error('Missing `plateNumber` or `plateState` in request body');
-  //   err.status = 400;
-  //   return next(err);
-  // }
 
   if(!plateNumber || plateNumber === '' ) {
     const err = {
@@ -114,12 +103,9 @@ router.post('/', jsonParser, (req, res, next) => {
 
   Plate.create({plateNumber, plateState, userId})
     .then(data => {
-      // console.log('is the newplate creating?', data);
-      // return res.json(data);
       return res.location(`${req.originalUrl}/${data.id}`).status(201).json(data);
     })
     .catch(err => {
-      console.log('error on post: ', err);
       next(err);
     });
 });
@@ -129,8 +115,6 @@ router.put('/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
   const plateState = req.body.plateState;
-  console.log('REQ.BODY from put: ',req.body);
-  console.log(userId);
  
   if(!plateNumber){
     const err = {
@@ -144,12 +128,9 @@ router.put('/:userId', (req, res, next) => {
 
   Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState } , { userId: userId })
     .then( plate => {
-      console.log('plate on PUT', plate);
       return plate;
     })
-    // .then(() => res.sendStatus(204))
     .then((data) => {
-      console.log(data);
       res.json(data);
     })
     .catch(err => next(err));
@@ -160,8 +141,6 @@ router.put('/unclaim/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
   const plateState = req.body.plateState;
-  console.log('REQ.BODY from UNCLAIM PUT: ',req.body);
-  console.log('USER ID: ', userId);
  
   if(!plateNumber){
     const err = {
@@ -173,13 +152,11 @@ router.put('/unclaim/:userId', (req, res, next) => {
     return next(err);
   }
 
-  Plate.findOneAndUpdate({ 'plateNumber': plateNumber } , { $unset: { userId: userId }})
+  Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState } , { $unset: { userId: userId }})
     .then( plate => {
-      console.log('plate on PUT unset', plate);
       return plate;
     })
     .then((data) => {
-      console.log(data);
       res.json(data);
     })
     .catch(err => next(err));

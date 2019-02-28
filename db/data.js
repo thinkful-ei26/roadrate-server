@@ -44,15 +44,7 @@ const plates = [
     userId: '000000000000000000000002',
     plateState: 'WY', 
     karma: -1
-  },
-  // {
-  //   _id: '000000000000000000000006',
-  //   plateNumber: 'HBPRINCE', 
-  //   carType: 'Truck', 
-  //   userId: '000000000000000000000002',
-  //   plateState: 'WY', 
-  //   karma: -1
-  // }
+  }
 ];
 
 const reviews = [
@@ -78,51 +70,7 @@ const reviews = [
     plateId:'000000000000000000000001',
     createdAt:'2019-02-23T11:15:52.266+00:00',
     updatedAt:'2019-02-25T20:56:03.233+00:00'
-  },
-  // {
-  //   plateId: '000000000000000000000001',
-  //   reviewerId: '000000000000000000000002',
-  //   plateNumber: '123-YOLO',
-  //   plateState: 'MA',
-  //   isPositive: false, 
-  //   message: 'Shifts between lanes like a mad woman',
-  //   ownerResponse: 'I was running late for work!'
-  // },
-  // {
-  //   plateId: '000000000000000000000001',
-  //   reviewerId: '000000000000000000000001',
-  //   plateNumber: '123-YOLO',
-  //   plateState: 'MA',
-  //   isPositive: true, 
-  //   message: 'Good Driver!',
-  //   ownerResponse: 'Thanks!'
-  // },
-  // {
-  //   plateId: '000000000000000000000002',
-  //   reviewerId: '000000000000000000000002',
-  //   plateNumber: '456-YOLO',
-  //   plateState: 'MA',
-  //   isPositive: false, 
-  //   message: 'Cut my off on i95 while driving like a lunatic!  Almost crashed into me and 3 other people',
-  //   ownerResponse: 'My wife was having a baby in the backseat, and I needed to rush to the hospital.  Sorry about that!  It\'s a GIRL!! '
-  // },
-  // {
-  //   plateId: '000000000000000000000002',
-  //   reviewerId: '000000000000000000000001',
-  //   plateNumber: '456-YOLO',
-  //   plateState: 'PA',
-  //   isPositive: true, 
-  //   message: 'Helped me change my car tire!',
-  //   ownerResponse: 'Nothing to see here'
-  // },
-  // {
-  //   plateId: '000000000000000000000002',
-  //   reviewerId: '000000000000000000000002',
-  //   plateNumber: '456-YOLO',
-  //   plateState: 'PA',
-  //   isPositive: false, 
-  //   message: 'Parked 5 feet from the curb and was affecting traffic getting downt the street.  7 thumbs down!!'
-  // }
+  }
 ];
 
 module.exports = { users, plates, reviews };

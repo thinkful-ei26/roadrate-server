@@ -8,7 +8,6 @@ const Plate = require('../models/plate');
 const Review = require('../models/review');
 const { users, plates, reviews } = require('../db/data');
 
-console.log(`Connecting to mongodb at ${TEST_DATABASE_URL}`);
 mongoose.connect(TEST_DATABASE_URL, { useNewUrlParser:true })
   .then(() => mongoose.connection.db.dropDatabase())
   .then(() => { 

@@ -26,6 +26,11 @@ chai.use(chaiHttp);
 describe('RoadRate - Reviews', function () {
   let token;
   let user;
+  let testReview;
+  let testPlate;
+  let ownerResponse = 'This is the test owner response';
+  let reviewId;
+  let plateId;
 
   //Test Review Info
   const plateNumber = 'TEST-1234';
@@ -39,6 +44,7 @@ describe('RoadRate - Reviews', function () {
   });
 
   beforeEach(function () {
+    this.timeout(5000);
     return Promise.all([
       User.deleteMany(),
       Plate.deleteMany(),
@@ -52,9 +58,14 @@ describe('RoadRate - Reviews', function () {
           Review.insertMany(reviews)
         ])
           .then(results => {
-            console.log('results from testing',results);
             const userResults = results[0];
+            const plateResults = results[2];
+            const reviewResults = results[3];
             user = userResults[0];
+            testPlate = plateResults[0];
+            plateId = testPlate._id;
+            testReview = reviewResults[1];
+            reviewId = testReview._id;
             token =  jwt.sign( { user }, JWT_SECRET, {
               subject: user.username,
               expiresIn: JWT_EXPIRY
@@ -64,6 +75,7 @@ describe('RoadRate - Reviews', function () {
   });
 
   afterEach(function () {
+    this.timeout(5000);
     return (() => {
       User.deleteMany();
       Plate.deleteMany();
@@ -77,7 +89,6 @@ describe('RoadRate - Reviews', function () {
   describe('POST /api/reviews', function () {
   
     it('Should create a new review', function () {
-      this.timeout(5000);
       let res;
       return chai
         .request(app)
@@ -104,7 +115,6 @@ describe('RoadRate - Reviews', function () {
         .request(app)
         .get('/api/reviews')
         .then(res => {
-          console.log(res);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
@@ -117,7 +127,6 @@ describe('RoadRate - Reviews', function () {
         .request(app)
         .get(`/api/reviews/${user.id}`)
         .then(res => {
-          console.log(res);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
@@ -125,17 +134,72 @@ describe('RoadRate - Reviews', function () {
         });
     });
 
-    // it('Should get all reviews about a specific plate', function () {
-    //   plateId = 
-    //   return chai
-    //     .request(app)
-    //     .get(`/api/reviews/my-plates/${plateId}`)
-    // });
+    it('Should get all reviews about a specific plate that\'s accessible to the public', function () {
+      return chai
+        .request(app)
+        .get(`/api/reviews/plate/${plateId}`)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(res.body.length);
+        });
+    });
 
+    it('Should get all reviews about my specific plate', function () {
+      return chai
+        .request(app)
+        .get(`/api/reviews/my-plates/${plateId}`)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(res.body.length);
+        });
+    });
+
+    it('Should get all reviews about a specific plate that matches plateState and plateNumber', function () {
+      return chai
+        .request(app)
+        .get(`/api/reviews/${testPlate.plateState}/${testPlate.plateNumber}`)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(res.body.length);
+        });
+    });
+
+    it('Should get one review by searching with its id', function () {
+      return chai
+        .request(app)
+        .get(`/api/reviews/${reviewId}`)
+        .then(res => {
+          console.log(res.body);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(1);
+        });
+    });
   });  
 
-  // describe('PUT /api/reviews', function () {
-
-  // });
-
+  describe('PUT /api/reviews', function () {
+    
+    it('Should add an ownerResponse to a review that already exists', function () {
+      return chai
+        .request(app)
+        .put(`/api/reviews/${reviewId}`)
+        .send({
+          ownerResponse
+        })
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.keys('plateId', 'plateNumber', 'isPositive', 'message', 'plateState', '_id', 'id', 'createdAt', 'updatedAt', 'ownerResponse');
+          expect(res.body.ownerResponse).to.exist;
+        });
+    });
+  });
 });

@@ -32,18 +32,12 @@ const expect = chai.expect;
 chai.use(chaiHttp); 
 
 describe('RoadRate API - Plates', () => {
-
-  //set token and user at high scope to be accessible for rest of test
   let token;
   let user;
   
-  //test hooks: 
-  //connect to db, blow away the existing db
   before(() => {
     return dbConnect(TEST_DATABASE_URL);
   });
-
-  //insert some notes before test & create the indexes too
 
   beforeEach( () => {
     return Promise.all([
@@ -57,7 +51,6 @@ describe('RoadRate API - Plates', () => {
           Plate.insertMany(plates)
         ])
           .then(results => {
-          // console.log('results from testing',results);
             const userResults = results[0];
             user = userResults[0];
             token =  jwt.sign( { user }, JWT_SECRET, {
@@ -74,8 +67,7 @@ describe('RoadRate API - Plates', () => {
       Plate.deleteMany()
     ]); 
   });
-
-  //after ALL tests, drobdb & disconnect server
+  
   after( () => {
     return dbDisconnect();
   });
@@ -83,7 +75,6 @@ describe('RoadRate API - Plates', () => {
 
   describe('GET /api/plates', () => {
 
-    //http://localhost:8080/api/plates/
     it('should return the correct number of Plates', () => {
       return Promise.all([
         Plate.find(),
@@ -98,21 +89,17 @@ describe('RoadRate API - Plates', () => {
         });
     }); /*end of it */
 
-    //http://localhost:8080/api/plates/?search=FIVE103&state=CO
     it('should return correct search results for a plateNumber search', () => {
       const search = 'SNOW';
       const state = 'AK';
-
       const re = new RegExp(search, 'i');
       const dbPromise = Plate
         .find({
           plateNumber: re,
           plateState: state
         });
-
       const apiPromise = chai.request(app)
         .get(`/api/plates/?search=${search}&state=${state}`);
-      
       return Promise.all([dbPromise, apiPromise])
         .then(([data, res]) => {
           expect(res).to.have.status(200);
@@ -135,17 +122,14 @@ describe('RoadRate API - Plates', () => {
     it('should return an empty array for an incorrect query', () => {
       const search = 'NOT-A-VALID-QUERY';
       const state = 'NOT-A-VALID-QUERY';
-
       const re = new RegExp(search, 'i');
       const dbPromise = Plate
         .find({
           plateNumber: re,
           plateState: state
         });
-
       const apiPromise = chai.request(app)
         .get(`/api/plates/?search=${search}&state=${state}`);
-    
       return Promise.all([dbPromise, apiPromise])
         .then(([data, res]) => {
           expect(res).to.have.status(200);
@@ -154,15 +138,12 @@ describe('RoadRate API - Plates', () => {
           expect(res.body).to.have.length(data.length);
         });
     }); // end of it()
-
-  
   }); // end of GET /api/plates
 
   describe('GET /api/plates/all/:id', () => {
-    it.skip('should return correct plate using the userId', () => {
+    it('should return correct plate using the userId', () => {
       let data;
-      const userId = '5c7080ea36aad20017f75ef2';
-
+      const userId = user.id;
       return Plate.find({ userId })
         .then(_data => {
           data = _data;
@@ -170,15 +151,11 @@ describe('RoadRate API - Plates', () => {
             .get(`/api/plates/all/${userId}`);
         })
         .then((res) => { //note karma is optional a plate can be claimed without a karma score
-
           const [ body ] = res.body;
-
-          // console.log('testing res.body: ', body);
-          // console.log('testing data', data);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('array');
-          expect(body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState');  // this is throwing an error 
+          expect(body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState');
           expect(res.body.id).to.equal(data.id);
           expect(res.body.carType).to.equal(data.carType);
           expect(res.body.plateNumber).to.equal(data.plateNumber);
@@ -194,7 +171,6 @@ describe('RoadRate API - Plates', () => {
           expect(res.body.message).to.equal('Missing `userId` to fetch plates');
         });
     }); //end of it()
-
   }); // end of GET /api/plates/:id
 
   describe('POST /api/plates', () => {
@@ -211,24 +187,19 @@ describe('RoadRate API - Plates', () => {
         .set('Authorization', `Bearer ${token}`)
         .send(newItem)
         .then((_res) => {
-
           res = _res;
           expect(res).to.have.status(201);
-          // expect(res).to.have.header('location');
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
           expect(res.body).to.have.all.keys('plateNumber', 'plateState', 'carType', 'id');
-
-          // console.log('POST RES: >>>>', res.body);
           return Plate.findById(res.body.id);
         })
         .then(data => {
-          // console.log('data on POST plates: ', data);
           expect(res.body.id).to.equal(data.id);
           expect(res.body.plateNumber).to.equal(data.plateNumber);
           expect(res.body.plateState).to.equal(data.plateState);
           expect(res.body.carType).to.equal(data.carType);
-          expect(newItem.userId).to.equal(data.userId.toString()); //userId is excluded on the JSON response after successful POST
+          expect(newItem.userId).to.equal(data.userId.toString());
         });
     });
 
@@ -246,28 +217,6 @@ describe('RoadRate API - Plates', () => {
           expect(res.body.message).to.equal('Missing `plateNumber` or `plateState` in request body');
         });
     }); //end of it()
-
-    // it('should return an error when "plateNumber" is empty string', () => {
-    //   const newItem = { 
-    //     plateNumber: '',
-    //     plateState: 'MA' 
-    //   };
-
-    //   return chai.request(app)
-    //     .post('/api/post')
-    //     .set('Authorization', `Bearer ${token}`)
-    //     .send(newItem)
-    //     .then(res => {
-    // console.log('res on testing',res.error);
-    // expect(res).to.have.status(400);
-    // expect(res).to.be.json;
-    // expect(res.body).to.be.a('object');
-    // expect(res.body.message).to.equal('Missing `plateNumber` or `plateState` in request body');
-    //     });
-    // }); //end of it()
-
   }); // end POST plate route
-
-
 });//end of ROADRATE PLATES
 

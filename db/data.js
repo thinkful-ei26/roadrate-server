@@ -77,8 +77,7 @@ const reviews = [
     plateState:'AK',
     plateId:'000000000000000000000001',
     createdAt:'2019-02-23T11:15:52.266+00:00',
-    updatedAt:'2019-02-25T20:56:03.233+00:00',
-    ownerResponse:'Thanks!'
+    updatedAt:'2019-02-25T20:56:03.233+00:00'
   },
   // {
   //   plateId: '000000000000000000000001',

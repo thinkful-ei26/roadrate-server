@@ -89,7 +89,9 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
 
 /* ========== POST A PLATE ========== */
 router.post('/', jsonParser, (req, res, next) => {
-  let {plateNumber, userId, plateState } = req.body;
+  let {plateNumber, userId, plateState, isOwned } = req.body;
+
+  console.log('isOwned', isOwned)
 
   if(!plateNumber || plateNumber === '' ) {
     const err = {
@@ -101,8 +103,9 @@ router.post('/', jsonParser, (req, res, next) => {
     return next(err);
   }
 
-  Plate.create({plateNumber, plateState, userId})
+  Plate.create({plateNumber, plateState, userId, isOwned})
     .then(data => {
+      console.log(data)
       return res.location(`${req.originalUrl}/${data.id}`).status(201).json(data);
     })
     .catch(err => {
@@ -115,6 +118,9 @@ router.put('/:userId', (req, res, next) => {
   const { userId } = req.params;
   const plateNumber = req.body.plateNumber;
   const plateState = req.body.plateState;
+  const isOwned = req.body.isOwned;
+
+  console.log('isowned:', isOwned)
  
   if(!plateNumber){
     const err = {
@@ -126,7 +132,7 @@ router.put('/:userId', (req, res, next) => {
     return next(err);
   }
 
-  Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState } , { userId: userId })
+  Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState, 'isOwned': isOwned } , { userId: userId })
     .then( plate => {
       return plate;
     })

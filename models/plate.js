@@ -25,6 +25,10 @@ const PlateSchema = new mongoose.Schema({
   numberOfReviews: {
     type: Number,
   },
+  isOwned: {
+    type: Boolean,
+    default: false
+  }
 });
 
 PlateSchema.index({ plateNumber: 1, plateState: 1, }, {unique: true, dropDups: true, partialFilterExpression: {plateState: {$exists: true} }});

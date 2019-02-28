@@ -121,6 +121,9 @@ router.put('/:userId', (req, res, next) => {
   const isOwned = req.body.isOwned;
 
   console.log('isowned:', isOwned)
+  console.log('state', plateState);
+  console.log('userId', userId)
+  console.log('bumer', plateNumber)
  
   if(!plateNumber){
     const err = {
@@ -132,11 +135,13 @@ router.put('/:userId', (req, res, next) => {
     return next(err);
   }
 
-  Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState, 'isOwned': isOwned } , { userId: userId })
+  Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState } , { userId: userId, 'isOwned': true })
     .then( plate => {
+      
       return plate;
     })
     .then((data) => {
+      console.log(data)
       res.json(data);
     })
     .catch(err => next(err));

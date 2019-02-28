@@ -34,7 +34,7 @@ const PlateSchema = new mongoose.Schema({
 
 PlateSchema.index({ plateNumber: 1, plateState: 1, }, {unique: true, dropDups: true, partialFilterExpression: {plateState: {$exists: true} }});
 PlateSchema.set({ autoIndex: false });
-mongoose.set('debug', true);
+mongoose.set('debug', false);
 
 PlateSchema.on('index', function(error) {
   console.log('error 49', error.message);

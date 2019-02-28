@@ -2,7 +2,7 @@
 
 const users = [
   {
-    _id : '5c7080ea36aad20017f75ef2',
+    _id : '000000000000000000000001',
     name: 'Severus Snape',
     username : 'severus',
     email : 'em@em.com',
@@ -11,7 +11,7 @@ const users = [
     updatedAt: '2019-02-26T16:10:40.003+00:00'
   },
   {
-    _id: '5c712afa1ee8106edae019d5',
+    _id: '000000000000000000000002',
     name: 'John Snow',
     username: 'john',
     password: '$2a$10$RO.gat3xGh28m.tmSHX9JOVUKJjpbb6t1gdRNhdDPBXxewlcypW7O',
@@ -23,62 +23,61 @@ const users = [
 
 const plates = [
   {
-    _id: '5c712b681ee8106edae019d6',
+    _id: '000000000000000000000001',
     plateNumber: 'SNOW', 
     carType: 'Truck', 
-    userId: '5c712afa1ee8106edae019d5',
+    userId: '000000000000000000000001',
     plateState: 'AK', 
     karma: 2
   },
   {
-    _id: '5c73d17085f19002f8d58763',
+    _id: '000000000000000000000002',
     plateNumber: 'SNOWY', 
     carType: 'Truck', 
     plateState: 'AK', 
     karma: 2
   },
   {
-    _id: '5c7082ce36aad20017f75ef8',
-    plateNumber: 'HBPRINCE', 
-    carType: 'Truck', 
-    userId: '5c7080ea36aad20017f75ef2',
-    plateState: 'WY', 
-    karma: -1
-  },
-  {
-    _id: '5c7082ce36aad20017f75ef8',
+    _id: '000000000000000000000003',
     plateNumber: 'HBPRINCE', 
     carType: 'Truck', 
     userId: '000000000000000000000002',
     plateState: 'WY', 
     karma: -1
-  }
+  },
+  // {
+  //   _id: '000000000000000000000006',
+  //   plateNumber: 'HBPRINCE', 
+  //   carType: 'Truck', 
+  //   userId: '000000000000000000000002',
+  //   plateState: 'WY', 
+  //   karma: -1
+  // }
 ];
 
 const reviews = [
   {
-    _id:'5c7082ce36aad20017f75ef9',
+    _id:'000000000000000000000001',
     plateNumber:'HBPRINCE',
-    reviewerId: '5c712afa1ee8106edae019d5',
+    reviewerId: '000000000000000000000001',
     message:'Really nice guy who got me a Starbucks gift card after I helped him change his tires.',
     isPositive:'true',
     plateState:'WY',
-    plateId:'5c7082ce36aad20017f75ef8',
+    plateId:'000000000000000000000003',
     createdAt:'2019-02-22T23:16:30.598+00:00',
     updatedAt:'2019-02-23T11:52:32.650+00:00',
     ownerResponse:'Thanks!'
   },
   {
-    _id:'5c712b681ee8106edae019d7',
+    _id:'000000000000000000000002',
     plateNumber:'SNOW',
-    reviewerId: '5c7080ea36aad20017f75ef2',
+    reviewerId: '000000000000000000000002',
     message:'Responsible driver',
     isPositive:'true',
     plateState:'AK',
-    plateId:'5c712b681ee8106edae019d6',
+    plateId:'000000000000000000000001',
     createdAt:'2019-02-23T11:15:52.266+00:00',
-    updatedAt:'2019-02-25T20:56:03.233+00:00',
-    ownerResponse:'Thanks!'
+    updatedAt:'2019-02-25T20:56:03.233+00:00'
   },
   // {
   //   plateId: '000000000000000000000001',

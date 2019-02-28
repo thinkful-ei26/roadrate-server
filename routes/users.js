@@ -9,8 +9,6 @@ router.get('/', (req, res, next) => {
   const { search } = req.query;
   let filter = {};
 
-  console.log(req.query);
-
   if (search) {
     // const re = new RegExp(search, 'i');
     filter.$or = [{ 'username': search }];
@@ -26,7 +24,6 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
 
-  console.log('this is the userid: ',id);
   if(!id || id === '' ) {
     const err = {
       message: 'Missing user `id`',
@@ -122,10 +119,8 @@ router.post('/', (req, res, next) => {
     name = name.trim();
   }
 
-  console.log(username, password, email, name);
   return User.hashPassword(password)
     .then(digest => {
-      console.log('digest', digest);
       const newUser = {
         username,
         name,
@@ -135,7 +130,6 @@ router.post('/', (req, res, next) => {
       return User.create(newUser);
     })
     .then(user => {
-      console.log('user', user);
       return res.status(201).json(user.serialize());
     })
     .catch( err => {

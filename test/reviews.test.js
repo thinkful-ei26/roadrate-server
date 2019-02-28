@@ -175,7 +175,6 @@ describe('RoadRate - Reviews', function () {
         .request(app)
         .get(`/api/reviews/${reviewId}`)
         .then(res => {
-          console.log(res.body);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');

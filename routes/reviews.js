@@ -120,8 +120,6 @@ router.post('/', jsonParser, (req, res, next) => {
   let isPositive = req.body.rating;
   let message = req.body.message;
   let plateState = req.body.plateState;
-
-  console.log('PlateState', plateState);
   
   const newReview = {
     plateNumber: plateNumber.toUpperCase(),
@@ -130,8 +128,6 @@ router.post('/', jsonParser, (req, res, next) => {
     isPositive,
     plateState,
   };
-
-  console.log('NEW REVIEW: ', newReview);
 
   Plate.findOne({plateNumber, plateState})
     .then(plate => {
@@ -146,7 +142,6 @@ router.post('/', jsonParser, (req, res, next) => {
         
         Plate.create({plateNumber, plateState, karma})
           .then((plate) => {
-            // console.log('new plate object', plate);
             newReview.plateId = plate._id;
             Review.create(newReview)
               .then(data => {
@@ -161,8 +156,6 @@ router.post('/', jsonParser, (req, res, next) => {
         Review.create(newReview)
           .then(data => {
             if (data.isPositive === 'true') {
-              console.log('updating karma score', 'id:' , newReview.plateId);
-              // Plate.findByIdAndUpdate(newReview.plateId, {$inc: { karma: 1}});
               Plate.findById(newReview.plateId)
                 .then(plate => plate.updateOne({$inc: {karma: 1}}));
             } else {
@@ -181,9 +174,6 @@ router.post('/', jsonParser, (req, res, next) => {
 router.put('/:id', jsonParser, (req, res, next) => {
   const {id} = req.params;
   const {ownerResponse} = req.body;
-
-  console.log('id', id);
-  console.log('response', ownerResponse);
   
   Review.findOneAndUpdate({_id: id}, {ownerResponse: ownerResponse}, {new: true})
     .then(review => res.json(review))

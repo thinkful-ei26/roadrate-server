@@ -24,11 +24,9 @@ router.get('/', (req, res, next) => {
   Plate.find(filter)
     .exec()
     .then(docs => {
-      console.log(docs);
       return res.status(200).json(docs);
     })
     .catch(err => {
-      console.log('error on get all plates: ', err);
       next(err);
     });
 });
@@ -108,7 +106,6 @@ router.post('/', jsonParser, (req, res, next) => {
       return res.location(`${req.originalUrl}/${data.id}`).status(201).json(data);
     })
     .catch(err => {
-      console.log('error on post: ', err);
       next(err);
     });
 });

@@ -14,12 +14,14 @@ router.get('/', (req, res, next) => {
   let filter = {};
 
   if (search && state) {
-    const re = new RegExp(search, 'i');
+    // const re = new RegExp(search, 'i');
     filter = {
-      plateNumber: re, 
+      plateNumber: search, 
       plateState: state
     };
   }
+
+  console.log(filter);
 
   Plate.find(filter)
     .exec()

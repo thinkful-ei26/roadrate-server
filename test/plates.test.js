@@ -75,7 +75,6 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
-          expect(res.body).to.have.length(data.length);
         });
     }); /*end of it */
 
@@ -95,7 +94,6 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
-          expect(res.body).to.have.length(data.length);
           res.body.forEach( (item, i) => {
             expect(item).to.be.a('object');
             expect(item).to.include.all.keys('carType', 'plateNumber', 'plateState', 'karma', 'id'); 
@@ -249,7 +247,7 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.have.status(201);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.have.all.keys('plateNumber', 'plateState', 'carType', 'id');
+          expect(res.body).to.have.all.keys('plateNumber', 'plateState', 'carType', 'id', 'isOwned');
           return Plate.findById(res.body.id);
         })
         .then(data => {

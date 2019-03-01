@@ -21,8 +21,6 @@ router.get('/', (req, res, next) => {
     };
   }
 
-  console.log(filter);
-
   Plate.find(filter)
     .exec()
     .then(docs => {
@@ -93,7 +91,7 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
 router.post('/', jsonParser, (req, res, next) => {
   let {plateNumber, userId, plateState, isOwned } = req.body;
 
-  console.log('isOwned', isOwned)
+  // console.log('isOwned', isOwned)
 
   if(!plateNumber || plateNumber === '' ) {
     const err = {
@@ -107,7 +105,7 @@ router.post('/', jsonParser, (req, res, next) => {
 
   Plate.create({plateNumber, plateState, userId, isOwned})
     .then(data => {
-      console.log(data)
+      // console.log(data)
       return res.location(`${req.originalUrl}/${data.id}`).status(201).json(data);
     })
     .catch(err => {
@@ -122,10 +120,10 @@ router.put('/:userId', (req, res, next) => {
   const plateState = req.body.plateState;
   const isOwned = req.body.isOwned;
 
-  console.log('isowned:', isOwned)
-  console.log('state', plateState);
-  console.log('userId', userId)
-  console.log('bumer', plateNumber)
+  // console.log('isowned:', isOwned)
+  // console.log('state', plateState);
+  // console.log('userId', userId)
+  // console.log('bumer', plateNumber)
  
   if(!plateNumber){
     const err = {
@@ -143,7 +141,6 @@ router.put('/:userId', (req, res, next) => {
       return plate;
     })
     .then((data) => {
-      console.log(data)
       res.json(data);
     })
     .catch(err => next(err));
@@ -165,7 +162,13 @@ router.put('/unclaim/:userId', (req, res, next) => {
     return next(err);
   }
 
-  Plate.findOneAndUpdate({ 'plateNumber': plateNumber, 'plateState': plateState } , { $unset: { userId: userId }})
+  Plate.findOneAndUpdate(
+    { 
+      'plateNumber': plateNumber, 
+      'plateState': plateState 
+    }, 
+    { $unset: { userId: userId, isOwned: false }}
+  )
     .then( plate => {
       return plate;
     })

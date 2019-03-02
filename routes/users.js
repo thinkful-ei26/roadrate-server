@@ -4,21 +4,23 @@ const User = require('../models/user');
 
 const router = express.Router();
 
-// /* ====== GET ALL USERS ====== */
-// router.get('/', (req, res, next) => {
-//   const { search } = req.query;
-//   let filter = {};
+/* ====== GET ALL USERS ====== */
+// Used in registration validation for duplicate username
 
-//   if (search) {
-//     // const re = new RegExp(search, 'i');
-//     filter.$or = [{ 'username': search }];
-//   }
+router.get('/', (req, res, next) => {
+  const { search } = req.query;
+  let filter = {};
 
-//   return User
-//     .find(filter)
-//     .then(users => res.json(users.map(user => user.serialize())))
-//     .catch(err => res.status(500).json({message: 'Internal server error'}));
-// });
+  if (search) {
+    // const re = new RegExp(search, 'i');
+    filter.$or = [{ 'username': search }];
+  }
+
+  return User
+    .find(filter)
+    .then(users => res.json(users.map(user => user.serialize())))
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
 
 // /* ======= GET USER BY ID - !!!DELETE IN PRODUCTION!!!! ===== */
 // router.get('/:id', (req, res, next) => {

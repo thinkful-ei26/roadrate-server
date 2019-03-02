@@ -85,7 +85,7 @@ router.post('/', (req, res, next) => {
     },
     password: {
       min: 8,
-      max: 15
+      max: 72
     },
     email: {
       min: 1

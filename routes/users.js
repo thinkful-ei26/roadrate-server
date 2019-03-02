@@ -4,41 +4,41 @@ const User = require('../models/user');
 
 const router = express.Router();
 
-/* ====== GET ALL USERS ====== */
-router.get('/', (req, res, next) => {
-  const { search } = req.query;
-  let filter = {};
+// /* ====== GET ALL USERS ====== */
+// router.get('/', (req, res, next) => {
+//   const { search } = req.query;
+//   let filter = {};
 
-  if (search) {
-    // const re = new RegExp(search, 'i');
-    filter.$or = [{ 'username': search }];
-  }
+//   if (search) {
+//     // const re = new RegExp(search, 'i');
+//     filter.$or = [{ 'username': search }];
+//   }
 
-  return User
-    .find(filter)
-    .then(users => res.json(users.map(user => user.serialize())))
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
-});
+//   return User
+//     .find(filter)
+//     .then(users => res.json(users.map(user => user.serialize())))
+//     .catch(err => res.status(500).json({message: 'Internal server error'}));
+// });
 
-/* ======= GET USER BY ID - !!!DELETE IN PRODUCTION!!!! ===== */
-router.get('/:id', (req, res, next) => {
-  const { id } = req.params;
+// /* ======= GET USER BY ID - !!!DELETE IN PRODUCTION!!!! ===== */
+// router.get('/:id', (req, res, next) => {
+//   const { id } = req.params;
 
-  if(!id || id === '' ) {
-    const err = {
-      message: 'Missing user `id`',
-      reason: 'MissingContent',
-      status: 400,
-      location: 'get'
-    };
-    return next(err);
-  }
+//   if(!id || id === '' ) {
+//     const err = {
+//       message: 'Missing user `id`',
+//       reason: 'MissingContent',
+//       status: 400,
+//       location: 'get'
+//     };
+//     return next(err);
+//   }
 
-  return User
-    .findById(id)
-    .then(user => res.json(user))
-    .catch(err => next(err));
-});
+//   return User
+//     .findById(id)
+//     .then(user => res.json(user))
+//     .catch(err => next(err));
+// });
 
 /* POST/CREATE user on /api/users */
 router.post('/', (req, res, next) => {
@@ -82,8 +82,8 @@ router.post('/', (req, res, next) => {
       min: 1
     },
     password: {
-      min: 10,
-      max: 72
+      min: 8,
+      max: 15
     },
     email: {
       min: 1
@@ -91,12 +91,10 @@ router.post('/', (req, res, next) => {
   };
         
   const tooSmallField = Object.keys(sizedFields).find(field => 
-    'min' in sizedFields[field] && 
-            req.body[field].trim().length < sizedFields[field].min);
+    'min' in sizedFields[field] && req.body[field].trim().length < sizedFields[field].min);
         
   const tooLargeField = Object.keys(sizedFields).find(field => 
-    'max' in sizedFields[field] &&
-              req.body[field].trim().length > sizedFields[field].max
+    'max' in sizedFields[field] && req.body[field].trim().length > sizedFields[field].max
   );
         
   if (tooSmallField) {

@@ -1,8 +1,6 @@
 'use strict';
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const mongoose = require('mongoose');
 
 //schemas
 const Plate = require('../models/plate');
@@ -76,7 +74,7 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
         });
-    }); /*end of it */
+    });
 
     it('should return correct search results for a plateNumber search', () => {
       const search = 'SNOW';
@@ -104,7 +102,7 @@ describe('RoadRate API - Plates', () => {
             expect(item.karma).to.equal(data[i].karma);
           });
         });
-    }); // end of it()
+    });
 
     it('should return an empty array for an incorrect query', () => {
       const search = 'NOT-A-VALID-QUERY';
@@ -124,8 +122,8 @@ describe('RoadRate API - Plates', () => {
           expect(res.body).to.be.a('array');
           expect(res.body).to.have.length(data.length);
         });
-    }); // end of it()
-  }); // end of GET /api/plates
+    });
+  }); 
 
   describe('GET /api/plates/all/:id', () => {
     it('should return correct plate using the userId', () => {
@@ -157,8 +155,8 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal('Missing `userId` to fetch plates');
         });
-    }); //end of it()
-  }); // end of GET /api/plates/all/:userId
+    });
+  });
 
   describe('GET /api/plates/:id', () => {
     it('should return correct plate using the plateId', () => {
@@ -175,13 +173,13 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('object');
-          expect(res.body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState');  // this is throwing an error 
+          expect(res.body).to.include.all.keys('id', 'carType', 'plateNumber', 'plateState'); 
           expect(res.body.id).to.equal(data.id);
           expect(res.body.carType).to.equal(data.carType);
           expect(res.body.plateNumber).to.equal(data.plateNumber);
           expect(res.body.plateState).to.equal(data.plateState);
         });
-    }); //end of it()
+    });
  
     it('should respond with status 400 and an error message when `id` is not valid', () => {
       return chai.request(app)
@@ -190,15 +188,14 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal('Missing `userId` to fetch plates');
         });
-    }); //end of it()
-  }); // end of GET /api/plates/:id
+    });
+  });
 
   describe('GET /api/plates/:id', () => {
     it('should return correct plate using the plateState and plateNumber', () => {
       let plateState = 'AK';
       let plateNumber = 'SNOW';
       let filter = {};
-      let data;
 
       filter = {
         plateState,
@@ -206,8 +203,7 @@ describe('RoadRate API - Plates', () => {
       };
 
       return Plate.find(filter)
-        .then(_data => {
-          data = _data;
+        .then(data => {
           return chai.request(app)
             .get(`/api/plates/${plateState}/${plateNumber}`);
         })
@@ -217,7 +213,7 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.be.json;
           expect(body).to.be.an('array');
         });
-    }); //end of it()
+    });
  
     it('should respond with status 400 and an error message when `id` is not valid', () => {
       return chai.request(app)
@@ -226,8 +222,8 @@ describe('RoadRate API - Plates', () => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal('Missing `userId` to fetch plates');
         });
-    }); //end of it()
-  }); // end of GET /api/plates/:id
+    });
+  }); 
 
   describe('POST /api/plates', () => {
 
@@ -271,8 +267,8 @@ describe('RoadRate API - Plates', () => {
           expect(res.body).to.be.a('object');
           expect(res.body.message).to.equal('Missing `plateNumber` or `plateState` in request body');
         });
-    }); //end of it()
-  }); // end POST plate route
+    });
+  }); 
 
   describe('PUT /api/plates/:userId', () => {
 
@@ -304,8 +300,8 @@ describe('RoadRate API - Plates', () => {
           expect(res.body.content).to.equal(data.content);
           expect(res.body.folderId).to.equal(data.folderId);
         });
-    }); //end of it()
-  });// end PUT plates/:userId route
+    });
+  });
 
   describe('PUT /api/plates/unclaim/:userId', () => {
     it('unclaim plate unsets userId from plate document', () => {
@@ -335,7 +331,7 @@ describe('RoadRate API - Plates', () => {
           expect(res.body.content).to.equal(data.content);
           expect(res.body.folderId).to.equal(data.folderId);
         });
-    }); //end of it()
-  });// end PUT plates/unclaim/:userId route
-});//end of ROADRATE PLATES
+    });
+  });
+});
 

@@ -14,7 +14,6 @@ router.get('/', (req, res, next) => {
   let filter = {};
 
   if (search && state) {
-    // const re = new RegExp(search, 'i');
     filter = {
       plateNumber: search, 
       plateState: state
@@ -91,8 +90,6 @@ router.get('/:plateState/:plateNumber', (req, res, next) => {
 router.post('/', jsonParser, (req, res, next) => {
   let {plateNumber, userId, plateState, isOwned } = req.body;
 
-  // console.log('isOwned', isOwned)
-
   if(!plateNumber || plateNumber === '' ) {
     const err = {
       message: 'Missing `plateNumber` or `plateState` in request body',
@@ -105,7 +102,6 @@ router.post('/', jsonParser, (req, res, next) => {
 
   Plate.create({plateNumber, plateState, userId, isOwned})
     .then(data => {
-      // console.log(data)
       return res.location(`${req.originalUrl}/${data.id}`).status(201).json(data);
     })
     .catch(err => {
@@ -119,11 +115,6 @@ router.put('/:userId', (req, res, next) => {
   const plateNumber = req.body.plateNumber;
   const plateState = req.body.plateState;
   const isOwned = req.body.isOwned;
-
-  // console.log('isowned:', isOwned)
-  // console.log('state', plateState);
-  // console.log('userId', userId)
-  // console.log('bumer', plateNumber)
  
   if(!plateNumber){
     const err = {

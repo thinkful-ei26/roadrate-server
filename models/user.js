@@ -30,7 +30,6 @@ UserSchema.set('toJSON', {
   }
 });
 
-//development:
 UserSchema.methods.serialize = function() {
   return {
     username: this.username,

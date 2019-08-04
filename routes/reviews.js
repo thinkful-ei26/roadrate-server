@@ -114,7 +114,6 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE A REVIEW ========== */
 router.post('/', jsonParser, (req, res, next) => {
-  console.log('posting a review')
   let plateNumber = req.body.plateNumber;
   let reviewerId = req.body.reviewerId;
   let isPositive = req.body.rating;
@@ -153,7 +152,6 @@ router.post('/', jsonParser, (req, res, next) => {
         newReview.plateId = plate._id;
         Review.create(newReview)
           .then(data => {
-            console.log('data post api/reviews/', data)
             if (data.isPositive === 'true') {
               console.log('positive data')
               Plate.findById(newReview.plateId)

@@ -153,11 +153,9 @@ router.post('/', jsonParser, (req, res, next) => {
         Review.create(newReview)
           .then(data => {
             if (data.isPositive === 'true') {
-              console.log('positive data')
               Plate.findById(newReview.plateId)
                 .then(plate => plate.updateOne({$inc: {karma: 1}}));
             } else {
-              console.log('!positive ')
               Plate.findById(newReview.plateId)
                 .then(plate => plate.updateOne({$inc: {karma: - 1}}));
             }  
